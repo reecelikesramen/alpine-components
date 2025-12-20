@@ -4,11 +4,10 @@
     {{> head pageTitle="Loading States"}}
 </head>
 <body>
-    <div class="docs-shell" x-data>
-        {{> sidebar active="loading-states"}}
-        <main class="docs-main">
-            <div class="container">
-                <section>
+    <main class="container" x-data>
+        {{> nav active="loading-states"}}
+
+        <section>
             <h1>Loading States</h1>
             <p>Show a placeholder while your component loads by creating a <code>.loading.html</code> file.</p>
 
@@ -28,7 +27,7 @@
             </div>
 
             <h2>Simple Loading State</h2>
-            <pre><code class="language-html">&lt;!-- modal.loading.html --&gt;
+            <pre><code>&lt;!-- modal.loading.html --&gt;
 &lt;div aria-busy="true"&gt;Loading...&lt;/div&gt;</code></pre>
 
             <p>Pico CSS styles <code>aria-busy="true"</code> with a spinner automatically.</p>
@@ -36,7 +35,7 @@
             <h2>Skeleton Loading</h2>
             <p>For a more polished experience, create skeleton placeholders that match your component's layout:</p>
 
-            <pre><code class="language-html">&lt;!-- card.loading.html --&gt;
+            <pre><code>&lt;!-- card.loading.html --&gt;
 &lt;article class="skeleton"&gt;
     &lt;div class="skeleton-image"&gt;&lt;/div&gt;
     &lt;div class="skeleton-line"&gt;&lt;/div&gt;
@@ -51,7 +50,7 @@
             <h2>Technical Details</h2>
             <p>The loading HTML is injected as a sibling element with a <code>data-loading-for</code> attribute:</p>
 
-            <pre><code class="language-html">&lt;!-- What the browser sees before component loads --&gt;
+            <pre><code>&lt;!-- What the browser sees before component loads --&gt;
 &lt;div data-loading-for="modal"&gt;
     &lt;div aria-busy="true"&gt;Loading...&lt;/div&gt;
 &lt;/div&gt;
@@ -72,11 +71,9 @@
                 <li>Use CSS animations for skeleton shimmer effects</li>
                 <li>Keep loading states simple — they should load instantly</li>
             </ul>
-                </section>
+        </section>
 
-                {{> footer}}
-            </div>
-        </main>
-    </div>
+        {{> footer}}
+    </main>
 </body>
 </html>

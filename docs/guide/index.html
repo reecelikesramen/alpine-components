@@ -4,22 +4,18 @@
     {{> head pageTitle="Quick Start Guide"}}
 </head>
 <body>
-    <div class="docs-shell" x-data>
-        {{> sidebar active="guide"}}
-        <main class="docs-main">
-            <div class="container">
-                <section>
+    <main class="container" x-data>
+        {{> nav active="guide"}}
+
+        <section>
             <h1>Quick Start Guide</h1>
             <p>Get up and running with Alpine Components in minutes.</p>
 
             <h2>1. Install</h2>
-            <pre><code class="language-bash">npm install alpine-components alpinejs</code></pre>
+            <pre><code>npm install alpine-components alpinejs</code></pre>
 
-            <h2>2. Choose an integration style</h2>
-            <p>Alpine Components ships as ESM/CJS for bundlers and an IIFE build for script tags.</p>
-
-            <h3>Module (bundler) style</h3>
-            <pre><code class="language-javascript">// main.js
+            <h2>2. Set up your entry file</h2>
+            <pre><code>// main.js
 import Alpine from 'alpinejs';
 import { AlpineComponent, AlpineComponentPlugin } from 'alpine-components';
 
@@ -29,20 +25,6 @@ AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
 // Use the plugin
 Alpine.plugin(AlpineComponentPlugin);
 Alpine.start();</code></pre>
-
-            <h3>Script tag (no bundler) style</h3>
-            <p>Use the prebuilt IIFE bundle from a CDN (or self-host it). It exposes <code>window.AlpineComponent</code> and auto-registers the plugin during <code>alpine:init</code>.</p>
-
-            <pre><code class="language-html">&lt;!-- index.html --&gt;
-&lt;script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"&gt;&lt;/script&gt;
-&lt;script defer src="https://cdn.jsdelivr.net/npm/alpine-components@0.1.2/dist/alpine-components.min.js"&gt;&lt;/script&gt;
-
-&lt;script&gt;
-document.addEventListener('alpine:init', () =&gt; {
-  AlpineComponent.setBase('/components');
-  AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
-});
-&lt;/script&gt;</code></pre>
 
             <h2>3. Create a component</h2>
             <p>Components consist of an HTML template and an optional JS file for Alpine data:</p>
@@ -56,7 +38,7 @@ document.addEventListener('alpine:init', () =&gt; {
             </div>
 
             <h3>modal.html</h3>
-            <pre><code class="language-html">&lt;template&gt;
+            <pre><code>&lt;template&gt;
 &lt;div x-data="modal"&gt;
     &lt;button x-bind="trigger"&gt;Open Modal&lt;/button&gt;
     &lt;dialog x-bind="dialog"&gt;
@@ -78,7 +60,7 @@ document.addEventListener('alpine:init', () =&gt; {
 &lt;/template&gt;</code></pre>
 
             <h3>modal.js</h3>
-            <pre><code class="language-javascript">export default function modal() {
+            <pre><code>export default function modal() {
     return {
         isOpen: false,
 
@@ -97,7 +79,7 @@ document.addEventListener('alpine:init', () =&gt; {
 }</code></pre>
 
             <h2>4. Use the component</h2>
-            <pre><code class="language-html">&lt;div x-component="modal"&gt;&lt;/div&gt;</code></pre>
+            <pre><code>&lt;div x-component="modal"&gt;&lt;/div&gt;</code></pre>
 
             <h2>Live Demo</h2>
             <div class="demo-container">
@@ -108,15 +90,13 @@ document.addEventListener('alpine:init', () =&gt; {
 
             <h2>Next Steps</h2>
             <ul>
-                <li><a href="loading-strategies">Learn about loading strategies</a> to optimize performance</li>
-                <li><a href="slots">Customize components with slots</a></li>
-                <li><a href="vite-plugin">Set up the Vite plugin</a> for development and production builds</li>
+                <li><a href="{{base}}loading-strategies">Learn about loading strategies</a> to optimize performance</li>
+                <li><a href="{{base}}slots">Customize components with slots</a></li>
+                <li><a href="{{base}}vite-plugin">Set up the Vite plugin</a> for development and production builds</li>
             </ul>
-                </section>
+        </section>
 
-                {{> footer}}
-            </div>
-        </main>
-    </div>
+        {{> footer}}
+    </main>
 </body>
 </html>

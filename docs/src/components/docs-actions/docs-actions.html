@@ -1,0 +1,9 @@
+<template>
+    <button class="outline docs-action" type="button" @click="$store.search?.open?.()">
+        Search <span class="docs-kbd">⌘K</span>
+    </button>
+    <button class="outline docs-action" type="button" @click="$store.theme?.cycle?.()">
+        Theme <span class="docs-kbd" x-text="$store.theme?.mode ?? 'auto'"></span>
+    </button>
+</template>
+

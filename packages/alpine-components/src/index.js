@@ -150,20 +150,19 @@ export function AlpineComponentPlugin(Alpine) {
         await strategies[strategyName](el, strategyArg, name);
         if (!el.isConnected) return;
 
-        // Collect slot content from <slot name="..."> elements
-        const slots = new Map();
+        // Collect user-provided slot content
+        const providedSlots = new Map();
+
+        // Collect named slots from <slot name="..."> wrappers
         el.querySelectorAll('slot[name]').forEach(slotEl => {
-            slots.set(slotEl.getAttribute('name'), slotEl.innerHTML);
+            providedSlots.set(slotEl.getAttribute('name'), slotEl.innerHTML);
         });
 
-        // Collect unnamed <slot> or direct children as default slot
-        const defaultSlot = el.querySelector('slot:not([name])');
-        if (defaultSlot) {
-            slots.set('default', defaultSlot.innerHTML);
-        } else if (!slots.size) {
-            const defaultContent = el.innerHTML.trim();
-            if (defaultContent) slots.set('default', defaultContent);
-        }
+        // Collect default slot: direct children excluding named slot wrappers
+        const namedSlotEls = el.querySelectorAll('slot[name]');
+        namedSlotEls.forEach(s => s.remove());
+        const defaultContent = el.innerHTML.trim();
+        if (defaultContent) providedSlots.set('default', defaultContent);
 
         // Clear element while loading
         el.innerHTML = '';
@@ -182,10 +181,51 @@ export function AlpineComponentPlugin(Alpine) {
             const container = document.createElement('div');
             container.innerHTML = content;
 
-            // Replace <slot> elements with provided content
-            container.querySelectorAll('slot').forEach(slotEl => {
+            // Validate template slots
+            const templateSlots = container.querySelectorAll('slot');
+            const validSlotNames = new Set();
+            let defaultSlotCount = 0;
+            const namedSlotCounts = new Map();
+
+            templateSlots.forEach(slotEl => {
                 const slotName = slotEl.getAttribute('name') || 'default';
-                const replacement = slots.get(slotName);
+                if (slotName === 'default') {
+                    defaultSlotCount++;
+                } else {
+                    namedSlotCounts.set(slotName, (namedSlotCounts.get(slotName) || 0) + 1);
+                }
+                validSlotNames.add(slotName);
+            });
+
+            // Warn on duplicate default slots
+            if (defaultSlotCount > 1) {
+                console.warn(`[x-component="${name}"] Template has ${defaultSlotCount} default slots; only one allowed.`);
+            }
+
+            // Warn on duplicate named slots
+            namedSlotCounts.forEach((count, slotName) => {
+                if (count > 1) {
+                    console.warn(`[x-component="${name}"] Template has ${count} slots named "${slotName}"; duplicates not allowed.`);
+                }
+            });
+
+            // Validate provided content against template slots
+            if (providedSlots.size > 0 && validSlotNames.size === 0) {
+                console.warn(`[x-component="${name}"] Content provided but component has no slots; discarding.`);
+                providedSlots.clear();
+            } else {
+                providedSlots.forEach((_, slotName) => {
+                    if (!validSlotNames.has(slotName)) {
+                        console.warn(`[x-component="${name}"] No slot "${slotName}" in template; discarding content.`);
+                        providedSlots.delete(slotName);
+                    }
+                });
+            }
+
+            // Replace <slot> elements with provided content
+            templateSlots.forEach(slotEl => {
+                const slotName = slotEl.getAttribute('name') || 'default';
+                const replacement = providedSlots.get(slotName);
 
                 if (replacement) {
                     const fragment = document.createRange().createContextualFragment(replacement);

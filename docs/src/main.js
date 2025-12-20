@@ -1,40 +1,8 @@
 import Alpine from 'alpinejs';
+import persist from '@alpinejs/persist';
 import collapse from '@alpinejs/collapse';
 import { AlpineComponent, AlpineComponentPlugin } from 'alpine-components';
 import { registerSearch } from './search/search.js';
-
-function registerTickers(Alpine) {
-  Alpine.data('commandTicker', ({ commands = [], intervalMs = 2600 } = {}) => ({
-    commands,
-    intervalMs,
-    index: 0,
-    _timer: null,
-
-    init() {
-      if (!Array.isArray(this.commands)) return;
-      if (this.commands.length <= 1) return;
-
-      const reduceMotion =
-        typeof window !== 'undefined' &&
-        typeof window.matchMedia === 'function' &&
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduceMotion) return;
-
-      this._timer = window.setInterval(() => this.next(), this.intervalMs);
-      this.$cleanup?.(() => {
-        if (!this._timer) return;
-        window.clearInterval(this._timer);
-        this._timer = null;
-      });
-    },
-
-    next() {
-      if (!Array.isArray(this.commands)) return;
-      if (!this.commands.length) return;
-      this.index = (this.index + 1) % this.commands.length;
-    }
-  }));
-}
 
 function createThemeStore() {
   const storageKey = 'ac-docs-theme';
@@ -116,15 +84,22 @@ AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
 AlpineComponent.register('tabs', 'tabs/tabs.html', 'tabs/tabs.js');
 AlpineComponent.register('code-block', 'code-block/code-block.html', 'code-block/code-block.js');
 AlpineComponent.register('demo', 'demo/demo.html', 'demo/demo.js');
+AlpineComponent.register('installTicker', 'install-ticker/install-ticker.html', 'install-ticker/install-ticker.js');
+AlpineComponent.register('search-modal', 'search-modal/search-modal.html');
+AlpineComponent.register('docs-actions', 'docs-actions/docs-actions.html');
+AlpineComponent.register('strategy-card', 'strategy-card/strategy-card.html');
 
 // Use plugins
 Alpine.plugin(collapse);
+Alpine.plugin(persist);
 Alpine.plugin(AlpineComponentPlugin);
 
 // Stores
 Alpine.store('theme', createThemeStore());
 Alpine.store('theme').init();
 registerSearch(Alpine);
-registerTickers(Alpine);
+
+// Init highlight.js
+if (window.hljs) window.hljs.highlightAll();
 
 Alpine.start();

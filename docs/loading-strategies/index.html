@@ -4,11 +4,10 @@
     {{> head pageTitle="Loading Strategies"}}
 </head>
 <body>
-    <div class="docs-shell" x-data>
-        {{> sidebar active="loading-strategies"}}
-        <main class="docs-main">
-            <div class="container">
-                <section>
+    <main class="container" x-data>
+        {{> nav active="loading-strategies"}}
+
+        <section>
             <h1>Loading Strategies</h1>
             <p>Control when your components load using modifiers. This is key to optimizing performance—only load what you need, when you need it.</p>
 
@@ -16,14 +15,14 @@
                 <article class="strategy-card">
                     <h3>Eager (default)</h3>
                     <p>Loads immediately when Alpine initializes. Best for above-the-fold content.</p>
-                    <pre><code class="language-html">&lt;div x-component="modal"&gt;&lt;/div&gt;
+                    <pre><code>&lt;div x-component="modal"&gt;&lt;/div&gt;
 &lt;div x-component.eager="modal"&gt;&lt;/div&gt;</code></pre>
                 </article>
 
                 <article class="strategy-card">
                     <h3>Visible</h3>
                     <p>Loads when the element enters the viewport. Uses IntersectionObserver for efficiency.</p>
-                    <pre><code class="language-html">&lt;!-- Load when visible --&gt;
+                    <pre><code>&lt;!-- Load when visible --&gt;
 &lt;div x-component.visible="modal"&gt;&lt;/div&gt;
 
 &lt;!-- Load 100px before visible --&gt;
@@ -33,17 +32,11 @@
                 <article class="strategy-card">
                     <h3>Event</h3>
                     <p>Waits for a custom event before loading. Perfect for modals, dropdowns, and on-demand content.</p>
-                    <pre><code class="language-html">&lt;button @click="$dispatch('openModal')"&gt;
+                    <pre><code>&lt;button @click="$dispatch('openModal')"&gt;
     Open Modal
 &lt;/button&gt;
 
 &lt;div x-component.event.openModal="modal"&gt;&lt;/div&gt;</code></pre>
-                    <p><strong>Default event</strong>: If you omit the explicit event name, <code>.event</code> waits for <code>alpine-components:load</code> and matches on <code>detail.id</code>.</p>
-                    <pre><code class="language-html">&lt;button @click="$dispatch('alpine-components:load', { id: 'modal' })"&gt;
-    Load Modal
-&lt;/button&gt;
-
-&lt;div x-component.event="modal"&gt;&lt;/div&gt;</code></pre>
                 </article>
             </div>
 
@@ -57,7 +50,7 @@
 
             <h3>Root Margin</h3>
             <p>Add a margin to trigger loading before the element is visible:</p>
-            <pre><code class="language-html">&lt;!-- Load 200px before entering viewport --&gt;
+            <pre><code>&lt;!-- Load 200px before entering viewport --&gt;
 &lt;div x-component.visible.200px="gallery"&gt;&lt;/div&gt;</code></pre>
 
             <h3>Demo</h3>
@@ -74,21 +67,13 @@
             </ul>
 
             <h3>Usage Pattern</h3>
-            <pre><code class="language-html">&lt;!-- Trigger button --&gt;
+            <pre><code>&lt;!-- Trigger button --&gt;
 &lt;button @click="$dispatch('showSettings')"&gt;
     Settings
 &lt;/button&gt;
 
 &lt;!-- Component loads only when event fires --&gt;
 &lt;div x-component.event.showSettings="settings-panel"&gt;&lt;/div&gt;</code></pre>
-
-            <h3>Default Event</h3>
-            <p>If you use <code>x-component.event="name"</code> without specifying a custom event name, the component waits for <code>alpine-components:load</code> and only loads when <code>detail.id</code> matches the component name.</p>
-            <pre><code class="language-html">&lt;button @click="$dispatch('alpine-components:load', { id: 'settings-panel' })"&gt;
-    Load Settings Panel
-&lt;/button&gt;
-
-&lt;div x-component.event="settings-panel"&gt;&lt;/div&gt;</code></pre>
 
             <h3>Demo</h3>
             <div class="image-placeholder">
@@ -124,11 +109,9 @@
                     </tbody>
                 </table>
             </div>
-                </section>
+        </section>
 
-                {{> footer}}
-            </div>
-        </main>
-    </div>
+        {{> footer}}
+    </main>
 </body>
 </html>

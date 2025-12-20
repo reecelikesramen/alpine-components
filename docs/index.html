@@ -9,25 +9,7 @@
         <header class="hero">
             <h1>Alpine Components</h1>
             <p class="tagline">Lazy-loaded components with slots for Alpine.js</p>
-            <div
-                class="install-snippet cmd-ticker"
-                role="button"
-                tabindex="0"
-                x-data="commandTicker({ commands: ['npm install alpine-components', 'pnpm add alpine-components', 'yarn add alpine-components'] })"
-                @click="next()"
-                @keydown.enter.prevent="next()"
-                @keydown.space.prevent="next()"
-                aria-label="Install command (click to switch between npm, pnpm, and yarn)"
-            >
-                <span class="cmd-ticker__viewport" aria-hidden="true">
-                    <span class="cmd-ticker__track" :style="`transform: translateY(-${index * 1.6}em)`">
-                        <template x-for="cmd in commands" :key="cmd">
-                            <span class="cmd-ticker__line"><code x-text="cmd"></code></span>
-                        </template>
-                    </span>
-                </span>
-                <span class="cmd-ticker__hint docs-kbd">click</span>
-            </div>
+            <div x-component="installTicker"></div>
         </header>
 
         {{> nav}}
@@ -35,22 +17,22 @@
         <!-- Features -->
         <section>
             <div class="strategy-grid">
-                <article class="strategy-card">
-                    <h3>Lazy Loading</h3>
-                    <p>Load components on-demand with eager, visible, or event-based strategies. Only fetch what you need, when you need it.</p>
-                    <a href="loading-strategies">Learn more →</a>
+                <article class="strategy-card" x-component="strategy-card">
+                    <slot name="title">Lazy Loading</slot>
+                    <slot name="description">Load components on-demand with eager, visible, or event-based strategies. Only fetch what you need, when you need it.</slot>
+                    <slot name="link"><a href="loading-strategies">Learn more →</a></slot>
                 </article>
 
-                <article class="strategy-card">
-                    <h3>Slots</h3>
-                    <p>Customize component content with named slots—just like Vue or Web Components. Define defaults, override as needed.</p>
-                    <a href="slots">Learn more →</a>
+                <article class="strategy-card" x-component="strategy-card">
+                    <slot name="title">Slots</slot>
+                    <slot name="description">Customize component content with named slots—just like Vue or Web Components. Define defaults, override as needed.</slot>
+                    <slot name="link"><a href="slots">Learn more →</a></slot>
                 </article>
 
-                <article class="strategy-card">
-                    <h3>Loading States</h3>
-                    <p>Show placeholders while components load. Create skeleton UIs with a simple <code>.loading.html</code> file.</p>
-                    <a href="loading-states">Learn more →</a>
+                <article class="strategy-card" x-component="strategy-card">
+                    <slot name="title">Loading States</slot>
+                    <slot name="description">Show placeholders while components load. Create skeleton UIs with a simple <code>.loading.html</code> file.</slot>
+                    <slot name="link"><a href="loading-states">Learn more →</a></slot>
                 </article>
             </div>
         </section>
@@ -59,7 +41,7 @@
         <section>
             <h2>Quick Example</h2>
 
-            <pre><code>// Register a component
+            <pre><code class="language-javascript">// Register a component
 AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
 
 // Use it in your HTML
@@ -81,11 +63,11 @@ AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
         <section>
             <h2>Installation</h2>
 
-            <pre><code>npm install alpine-components alpinejs</code></pre>
+            <pre><code class="language-bash">npm install alpine-components alpinejs</code></pre>
 
             <p>For the Vite plugin (recommended):</p>
 
-            <pre><code>npm install -D vite-plugin-alpine-components</code></pre>
+            <pre><code class="language-bash">npm install -D vite-plugin-alpine-components</code></pre>
 
             <p><a href="vite-plugin">Configure the Vite plugin →</a></p>
         </section>

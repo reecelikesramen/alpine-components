@@ -19,9 +19,6 @@ importers:
       alpinejs:
         specifier: ^3.15.3
         version: 3.15.3
-      async-alpine:
-        specifier: ^2.0.3
-        version: 2.0.3
       fuse.js:
         specifier: ^7.0.0
         version: 7.1.0
@@ -512,9 +509,6 @@ packages:
   alpinejs@3.15.3:
     resolution: {integrity: sha512-fSI6F5213FdpMC4IWaup92KhuH3jBX0VVqajRJ6cOTCy1cL6888KyXdGO+seAAkn+g6fnrxBqQEx6gRpQ5EZoQ==}
 
-  async-alpine@2.0.3:
-    resolution: {integrity: sha512-Gu5iPrMGHwgNYlRBZgfmtmfxLwatNLO5UD8QMZxju4ANe82rcFeB9heX+WCPMdvPWLFVdgSCKLd6gIzhktdnRA==}
-
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
@@ -994,8 +988,6 @@ snapshots:
   alpinejs@3.15.3:
     dependencies:
       '@vue/reactivity': 3.1.5
-
-  async-alpine@2.0.3: {}
 
   buffer-from@1.1.2: {}
 

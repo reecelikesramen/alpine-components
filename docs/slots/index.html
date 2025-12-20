@@ -4,18 +4,17 @@
     {{> head pageTitle="Slots"}}
 </head>
 <body>
-    <div class="docs-shell" x-data>
-        {{> sidebar active="slots"}}
-        <main class="docs-main">
-            <div class="container">
-                <section>
+    <main class="container" x-data>
+        {{> nav active="slots"}}
+
+        <section>
             <h1>Slots</h1>
             <p>Customize component content using slots—similar to Vue or Web Components. Define slots in your template and fill them when using the component.</p>
 
             <h2>Default Slot</h2>
-            <p>Child content of an <code>x-component</code> element automatically goes into the default slot—no wrapper needed:</p>
+            <p>If you don't specify a slot name, content goes into the default slot:</p>
 
-            <pre><code class="language-html">&lt;!-- In your template --&gt;
+            <pre><code>&lt;!-- In your template --&gt;
 &lt;div class="card"&gt;
     &lt;slot&gt;Default content if nothing provided&lt;/slot&gt;
 &lt;/div&gt;
@@ -25,12 +24,10 @@
     &lt;p&gt;This replaces the default slot content.&lt;/p&gt;
 &lt;/div&gt;</code></pre>
 
-            <p>Only one default slot is allowed per template. A component can have both a default slot and named slots.</p>
-
             <h2>Named Slots</h2>
             <p>Use named slots for more complex layouts:</p>
 
-            <pre><code class="language-html">&lt;!-- In your template --&gt;
+            <pre><code>&lt;!-- In your template --&gt;
 &lt;article&gt;
     &lt;header&gt;
         &lt;slot name="header"&gt;Default Header&lt;/slot&gt;
@@ -42,7 +39,7 @@
 &lt;/article&gt;</code></pre>
 
             <h3>Filling Named Slots</h3>
-            <pre><code class="language-html">&lt;div x-component="modal"&gt;
+            <pre><code>&lt;div x-component="modal"&gt;
     &lt;slot name="header"&gt;
         &lt;h3&gt;Custom Title&lt;/h3&gt;
     &lt;/slot&gt;
@@ -82,7 +79,7 @@
             <h2>Fallback Content</h2>
             <p>Slots can have default content that shows when no content is provided:</p>
 
-            <pre><code class="language-html">&lt;!-- Template with fallback --&gt;
+            <pre><code>&lt;!-- Template with fallback --&gt;
 &lt;slot name="icon"&gt;
     &lt;svg&gt;...default icon...&lt;/svg&gt;
 &lt;/slot&gt;
@@ -97,15 +94,6 @@
     &lt;/slot&gt;
 &lt;/div&gt;</code></pre>
 
-            <h2>Validation</h2>
-            <p>Alpine Components validates slot usage and logs console warnings for:</p>
-            <ul>
-                <li><strong>Content without slots</strong> — If a component has no slots but you provide child content, it's discarded</li>
-                <li><strong>Missing slot</strong> — If you provide content for a slot that doesn't exist in the template, it's discarded</li>
-                <li><strong>Duplicate default slots</strong> — Templates should have at most one default <code>&lt;slot&gt;</code></li>
-                <li><strong>Duplicate named slots</strong> — Each slot name should be unique in the template</li>
-            </ul>
-
             <h2>Best Practices</h2>
             <ul>
                 <li><strong>Use semantic slot names</strong> — <code>header</code>, <code>body</code>, <code>footer</code>, <code>trigger</code></li>
@@ -113,11 +101,9 @@
                 <li><strong>Document your slots</strong> — List available slots in your component's README</li>
                 <li><strong>Keep slots focused</strong> — Each slot should have a single purpose</li>
             </ul>
-                </section>
+        </section>
 
-                {{> footer}}
-            </div>
-        </main>
-    </div>
+        {{> footer}}
+    </main>
 </body>
 </html>

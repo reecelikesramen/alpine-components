@@ -9,13 +9,6 @@
         <li><a href="api"{{#if (eq active "api")}} aria-current="page"{{/if}}>API</a></li>
     </ul>
 
-    <div class="docs-nav__actions">
-        <button class="outline docs-action" type="button" @click="$store.search?.open?.()">
-            Search <span class="docs-kbd">⌘K</span>
-        </button>
-        <button class="outline docs-action" type="button" @click="$store.theme?.cycle?.()">
-            Theme <span class="docs-kbd" x-text="$store.theme?.mode ?? 'auto'"></span>
-        </button>
-    </div>
+    <div class="docs-nav__actions" x-component="docs-actions"></div>
 </nav>
 
