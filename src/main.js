@@ -1,0 +1,164 @@
+import Alpine from 'alpinejs';
+import AsyncAlpine from 'async-alpine';
+
+Alpine.plugin(AsyncAlpine);
+
+// --- AlpineComponent Plugin ---
+const AlpineComponent = {
+    _registry: new Map(),
+    _cache: new Map(),
+    _jsModules: new Map(),
+    _base: '/components',
+
+    setBase(base) {
+        this._base = base.endsWith('/') ? base.slice(0, -1) : base;
+    },
+
+    register(name, templatePath, jsPath = null, options = {}) {
+        const resolvePath = (p) => p.startsWith('/') ? p : `${this._base}/${p}`;
+        const resolvedTemplate = resolvePath(templatePath);
+        const resolvedJs = jsPath ? resolvePath(jsPath) : null;
+        this._registry.set(name, { templatePath: resolvedTemplate, jsPath: resolvedJs, options });
+        if (options.eager) this._prefetch(name);
+    },
+
+    async _prefetch(name) {
+        const def = this._registry.get(name);
+        if (!def) return;
+
+        const promises = [this._fetchTemplate(def.templatePath)];
+        if (def.jsPath) promises.push(this._loadJs(name, def.jsPath));
+        await Promise.all(promises);
+    },
+
+    _fetchTemplate(path) {
+        if (this._cache.has(path)) return this._cache.get(path);
+
+        const promise = fetch(path).then(res => res.text());
+        this._cache.set(path, promise);
+        return promise;
+    },
+
+    _loadJs(name, path) {
+        if (this._jsModules.has(name)) return this._jsModules.get(name);
+
+        const promise = import(/* @vite-ignore */ path).then(module => {
+            const fn = module.default;
+            if (!Alpine._data || !Alpine._data[name]) {
+                Alpine.data(name, fn);
+            }
+            return fn;
+        });
+        this._jsModules.set(name, promise);
+        return promise;
+    },
+
+    async _resolve(name) {
+        const def = this._registry.get(name);
+        if (!def) throw new Error(`Component "${name}" not registered`);
+
+        const [html] = await Promise.all([
+            this._fetchTemplate(def.templatePath),
+            def.jsPath ? this._loadJs(name, def.jsPath) : Promise.resolve()
+        ]);
+        return html;
+    }
+};
+
+function AlpineComponentPlugin(Alpine) {
+    const ignoreAttr = Alpine.prefixed('ignore');
+
+    // Sync handler: runs immediately to prevent tree walking
+    const syncHandler = (el) => {
+        if (el._x_component) return;
+        el._x_component = 'init';
+        el._x_ignore = true;
+        el.setAttribute(ignoreAttr, '');
+        el.setAttribute('x-cloak', '');
+    };
+
+    // Async handler: loads and activates component
+    const asyncHandler = async (el, { expression }) => {
+        if (el._x_component !== 'init') return;
+        el._x_component = 'loading';
+
+        const name = expression;
+
+        // Collect slot content from <slot name="..."> elements
+        const slots = new Map();
+        el.querySelectorAll('slot[name]').forEach(slotEl => {
+            slots.set(slotEl.getAttribute('name'), slotEl.innerHTML);
+        });
+
+        // Collect unnamed <slot> or direct children as default slot
+        const defaultSlot = el.querySelector('slot:not([name])');
+        if (defaultSlot) {
+            slots.set('default', defaultSlot.innerHTML);
+        } else if (!slots.size) {
+            const defaultContent = el.innerHTML.trim();
+            if (defaultContent) slots.set('default', defaultContent);
+        }
+
+        // Clear element while loading
+        el.innerHTML = '';
+
+        try {
+            const templateHtml = await AlpineComponent._resolve(name);
+            if (!el.isConnected) return;
+
+            // Parse the template
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(templateHtml, 'text/html');
+            const template = doc.querySelector('template');
+            const content = template ? template.innerHTML : templateHtml;
+
+            // Create a container to process slots
+            const container = document.createElement('div');
+            container.innerHTML = content;
+
+            // Replace <slot> elements with provided content
+            container.querySelectorAll('slot').forEach(slotEl => {
+                const slotName = slotEl.getAttribute('name') || 'default';
+                const replacement = slots.get(slotName);
+
+                if (replacement) {
+                    const fragment = document.createRange().createContextualFragment(replacement);
+                    slotEl.replaceWith(fragment);
+                } else {
+                    const fragment = document.createRange().createContextualFragment(slotEl.innerHTML);
+                    slotEl.replaceWith(fragment);
+                }
+            });
+
+            // Inject processed content
+            el.innerHTML = container.innerHTML;
+
+            // Activate: remove ignore and init tree
+            el._x_ignore = false;
+            el.removeAttribute(ignoreAttr);
+            el.removeAttribute('x-cloak');
+            el._x_component = 'loaded';
+
+            Alpine.initTree(el);
+
+            // Remove loading sibling if present
+            const loadingSibling = el.previousElementSibling;
+            if (loadingSibling?.dataset.loadingFor === name) {
+                loadingSibling.remove();
+            }
+        } catch (err) {
+            console.error(`Failed to load component "${name}":`, err);
+        }
+    };
+
+    asyncHandler.inline = syncHandler;
+
+    Alpine.directive('component', asyncHandler).before('ignore');
+}
+// --- End AlpineComponent Plugin ---
+AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
+
+Alpine.plugin(AlpineComponentPlugin);
+
+
+Alpine.start();

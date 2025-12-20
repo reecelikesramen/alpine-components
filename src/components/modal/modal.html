@@ -1,0 +1,29 @@
+<template>
+<div x-data="modal">
+    <!-- Trigger -->
+        <slot name="trigger">
+    <button x-bind="trigger" class="contrast">Open Modal</button>
+        </slot>
+
+    <!-- Modal -->
+    <dialog x-bind="dialog">
+        <article>
+            <header>
+                <button aria-label="Close" rel="prev" x-bind="closeButton"></button>
+                    <slot name="header">
+                        <p><strong>Modal Title</strong></p>
+                    </slot>
+            </header>
+                <slot name="body">
+                    <p>Modal content goes here.</p>
+                </slot>
+            <footer>
+                    <slot name="footer">
+                <button class="secondary" x-bind="closeButton">Cancel</button>
+                <button x-bind="closeButton">Confirm</button>
+                    </slot>
+            </footer>
+        </article>
+    </dialog>
+</div>
+</template>

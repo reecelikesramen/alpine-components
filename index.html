@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Alpine Components</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <script type="module" src="/src/main.js"></script>
+</head>
+
+<body>
+    <main class="container" x-data>
+        <h1>Alpine Components Demo</h1>
+
+        <section>
+            <h2>Default Modal</h2>
+            <div x-component="modal"></div>
+        </section>
+
+        <section>
+            <h2>Custom Modal</h2>
+            <div x-component="modal">
+                <slot name="trigger">
+                    <button x-bind="trigger" class="outline">Custom Trigger</button>
+                </slot>
+                <slot name="header">
+                    <p><strong>🗓️ Thank You for Registering!</strong></p>
+                </slot>
+                <slot name="body">
+                    <p>
+                        We're excited to have you join us for our
+                        upcoming event. Please arrive at the museum
+                        on time to check in and get started.
+                    </p>
+                </slot>
+                <slot name="footer">
+                    <button class="secondary" x-bind="closeButton">Maybe Later</button>
+                    <button x-bind="closeButton">I'll Be There!</button>
+                </slot>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
