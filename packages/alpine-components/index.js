@@ -1,4 +1,26 @@
 /**
+ * Loading strategies for x-component directive
+ */
+const strategies = {
+    eager: () => Promise.resolve(),
+
+    visible: (el, margin = '0px') => new Promise(resolve => {
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                observer.disconnect();
+                resolve();
+            }
+        }, { rootMargin: margin });
+        observer.observe(el);
+    }),
+
+    event: (el, eventName) => new Promise(resolve => {
+        if (!eventName) return resolve();
+        window.addEventListener(eventName, () => resolve(), { once: true });
+    })
+};
+
+/**
  * AlpineComponent - Lazy-loaded components with slots for Alpine.js
  */
 export const AlpineComponent = {
@@ -19,6 +41,23 @@ export const AlpineComponent = {
         if (options.eager) this._prefetch(name);
     },
 
+    _resolvePath(path) {
+        const manifest = typeof window !== 'undefined' && window.__AC_MANIFEST__;
+        if (!manifest) return path;
+
+        // Extract relative path from full path (remove base prefix)
+        const baseWithSlash = this._base + '/';
+        const relative = path.startsWith(baseWithSlash)
+            ? path.slice(baseWithSlash.length)
+            : path;
+
+        const hashed = manifest[relative];
+        if (!hashed) return path;
+
+        // Replace filename with hashed version
+        return path.replace(/[^/]+$/, hashed.split('/').pop());
+    },
+
     async _prefetch(name) {
         const def = this._registry.get(name);
         if (!def) return;
@@ -29,17 +68,19 @@ export const AlpineComponent = {
     },
 
     _fetchTemplate(path) {
-        if (this._cache.has(path)) return this._cache.get(path);
+        const resolved = this._resolvePath(path);
+        if (this._cache.has(resolved)) return this._cache.get(resolved);
 
-        const promise = fetch(path).then(res => res.text());
-        this._cache.set(path, promise);
+        const promise = fetch(resolved).then(res => res.text());
+        this._cache.set(resolved, promise);
         return promise;
     },
 
     _loadJs(name, path) {
         if (this._jsModules.has(name)) return this._jsModules.get(name);
 
-        const promise = import(/* @vite-ignore */ path).then(module => {
+        const resolved = this._resolvePath(path);
+        const promise = import(/* @vite-ignore */ resolved).then(module => {
             const fn = module.default;
             if (!this._Alpine._data || !this._Alpine._data[name]) {
                 this._Alpine.data(name, fn);
@@ -79,11 +120,19 @@ export function AlpineComponentPlugin(Alpine) {
     };
 
     // Async handler: loads and activates component
-    const asyncHandler = async (el, { expression }) => {
+    const asyncHandler = async (el, { expression, modifiers }) => {
         if (el._x_component !== 'init') return;
         el._x_component = 'loading';
 
         const name = expression;
+
+        // Parse strategy from modifiers (default: eager)
+        const strategyName = ['visible', 'event', 'eager'].find(s => modifiers.includes(s)) || 'eager';
+        const strategyArg = modifiers.find(m => !['visible', 'event', 'eager'].includes(m));
+
+        // Await strategy condition
+        await strategies[strategyName](el, strategyArg);
+        if (!el.isConnected) return;
 
         // Collect slot content from <slot name="..."> elements
         const slots = new Map();

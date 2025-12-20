@@ -1,0 +1,9 @@
+<template>
+<div x-data="codeBlock" class="code-block">
+    <div class="code-header">
+        <span x-text="language"></span>
+        <button class="copy-btn outline secondary" @click="copy" x-text="copied ? 'Copied!' : 'Copy'"></button>
+    </div>
+    <pre><code x-ref="code"><slot></slot></code></pre>
+</div>
+</template>

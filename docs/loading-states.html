@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    {{> head pageTitle="Loading States"}}
+</head>
+<body>
+    <main class="container" x-data>
+        {{> nav active="loading-states"}}
+
+        <section>
+            <h1>Loading States</h1>
+            <p>Show a placeholder while your component loads by creating a <code>.loading.html</code> file.</p>
+
+            <h2>How It Works</h2>
+            <ol>
+                <li>Create a file named <code>{component}.loading.html</code> next to your component</li>
+                <li>The Vite plugin automatically injects it before your component element</li>
+                <li>When the component loads, the loading state is removed</li>
+            </ol>
+
+            <div class="file-tree">
+                src/components/<br>
+                └── modal/<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── modal.html<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── modal.js<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;└── modal.loading.html &nbsp;← Shows while loading
+            </div>
+
+            <h2>Simple Loading State</h2>
+            <pre><code>&lt;!-- modal.loading.html --&gt;
+&lt;div aria-busy="true"&gt;Loading...&lt;/div&gt;</code></pre>
+
+            <p>Pico CSS styles <code>aria-busy="true"</code> with a spinner automatically.</p>
+
+            <h2>Skeleton Loading</h2>
+            <p>For a more polished experience, create skeleton placeholders that match your component's layout:</p>
+
+            <pre><code>&lt;!-- card.loading.html --&gt;
+&lt;article class="skeleton"&gt;
+    &lt;div class="skeleton-image"&gt;&lt;/div&gt;
+    &lt;div class="skeleton-line"&gt;&lt;/div&gt;
+    &lt;div class="skeleton-line short"&gt;&lt;/div&gt;
+&lt;/article&gt;</code></pre>
+
+            <h2>Demo</h2>
+            <div class="image-placeholder">
+                [IMAGE: loading-state.gif] — Recording showing loading placeholder appearing briefly before component renders
+            </div>
+
+            <h2>Technical Details</h2>
+            <p>The loading HTML is injected as a sibling element with a <code>data-loading-for</code> attribute:</p>
+
+            <pre><code>&lt;!-- What the browser sees before component loads --&gt;
+&lt;div data-loading-for="modal"&gt;
+    &lt;div aria-busy="true"&gt;Loading...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div x-component="modal"&gt;&lt;/div&gt;
+
+&lt;!-- After component loads, the loading wrapper is removed --&gt;</code></pre>
+
+            <h2>When to Use Loading States</h2>
+            <ul>
+                <li><strong>Event-triggered components</strong> — Show feedback immediately when user clicks</li>
+                <li><strong>Slow network conditions</strong> — Prevent layout shift as components load</li>
+                <li><strong>Complex components</strong> — Large components with significant JS may take time to initialize</li>
+            </ul>
+
+            <h2>Styling Tips</h2>
+            <ul>
+                <li>Match the loading state dimensions to the final component to prevent layout shift</li>
+                <li>Use CSS animations for skeleton shimmer effects</li>
+                <li>Keep loading states simple — they should load instantly</li>
+            </ul>
+        </section>
+
+        {{> footer}}
+    </main>
+</body>
+</html>

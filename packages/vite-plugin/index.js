@@ -1,7 +1,12 @@
 import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises';
 import { join, relative, dirname } from 'node:path';
+import { createHash } from 'node:crypto';
 import { minify as minifyHtml } from 'html-minifier-terser';
 import { minify as minifyJs } from 'terser';
+
+function contentHash(content) {
+  return createHash('sha256').update(content).digest('hex').slice(0, 8);
+}
 
 const HTML_MINIFY_OPTIONS = {
   collapseWhitespace: true,
@@ -27,6 +32,9 @@ export function componentAssetsPlugin(options = {}) {
 
   // Cache for loading HTML content
   const loadingCache = new Map();
+
+  // Manifest mapping original paths to hashed paths (build only)
+  const manifest = {};
 
   async function getLoadingHtml(componentName) {
     if (loadingCache.has(componentName)) return loadingCache.get(componentName);
@@ -104,29 +112,42 @@ export function componentAssetsPlugin(options = {}) {
       });
     },
 
-    // Build: copy and minify component files
+    // Build: copy and minify component files with content hashing
     async closeBundle() {
       if (!isBuild) return;
 
       const srcDir = join(rootDir, src);
       const outDir = join(rootDir, 'dist', dest);
 
-      await processDirectory(srcDir, outDir, srcDir);
+      await processDirectory(srcDir, outDir, srcDir, manifest);
+
+      // Inject manifest into built HTML
+      if (Object.keys(manifest).length === 0) return;
+
+      const htmlPath = join(rootDir, 'dist', 'index.html');
+      try {
+        let html = await readFile(htmlPath, 'utf-8');
+        const script = `<script>window.__AC_MANIFEST__=${JSON.stringify(manifest)};</script>`;
+        html = html.replace('<head>', `<head>${script}`);
+        await writeFile(htmlPath, html);
+      } catch {
+        // index.html may not exist in all builds
+      }
     }
   };
 }
 
-async function processDirectory(dir, outDir, baseDir) {
+async function processDirectory(dir, outDir, baseDir, manifest) {
   const entries = await readdir(dir, { withFileTypes: true });
 
   for (const entry of entries) {
     const srcPath = join(dir, entry.name);
     const relativePath = relative(baseDir, srcPath);
-    const destPath = join(outDir, relativePath);
+    const destDir = join(outDir, dirname(relativePath));
 
     if (entry.isDirectory()) {
-      await mkdir(destPath, { recursive: true });
-      await processDirectory(srcPath, outDir, baseDir);
+      await mkdir(join(outDir, relativePath), { recursive: true });
+      await processDirectory(srcPath, outDir, baseDir, manifest);
       continue;
     }
 
@@ -134,25 +155,39 @@ async function processDirectory(dir, outDir, baseDir) {
     if (ext !== 'html' && ext !== 'js') continue;
     if (entry.name.endsWith('.loading.html')) continue;
 
-    await mkdir(dirname(destPath), { recursive: true });
+    await mkdir(destDir, { recursive: true });
     const content = await readFile(srcPath, 'utf-8');
 
+    let outputContent;
+    let sourceMap;
+
     if (ext === 'html') {
-      const minified = await minifyHtml(content, HTML_MINIFY_OPTIONS);
-      await writeFile(destPath, minified);
-    } else if (ext === 'js') {
+      outputContent = await minifyHtml(content, HTML_MINIFY_OPTIONS);
+    } else {
       const result = await minifyJs(content, {
-        sourceMap: {
-          filename: entry.name,
-          url: `${entry.name}.map`
-        },
+        sourceMap: { filename: entry.name, url: 'inline' },
         compress: true,
         mangle: true
       });
-      await writeFile(destPath, result.code);
-      if (result.map) {
-        await writeFile(`${destPath}.map`, result.map);
-      }
+      outputContent = result.code;
+      sourceMap = result.map;
+    }
+
+    // Compute hash and create hashed filename
+    const hash = contentHash(outputContent);
+    const baseName = entry.name.replace(/\.[^.]+$/, '');
+    const hashedName = `${baseName}.${hash}.${ext}`;
+    const hashedPath = join(destDir, hashedName);
+
+    // Record in manifest: relative original path -> relative hashed path
+    const originalRelative = relativePath;
+    const hashedRelative = join(dirname(relativePath), hashedName);
+    manifest[originalRelative] = hashedRelative;
+
+    await writeFile(hashedPath, outputContent);
+
+    if (ext === 'js' && sourceMap) {
+      await writeFile(`${hashedPath}.map`, sourceMap);
     }
   }
 }

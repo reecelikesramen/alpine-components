@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    {{> head pageTitle="Vite Plugin"}}
+</head>
+<body>
+    <main class="container" x-data>
+        {{> nav active="vite-plugin"}}
+
+        <section>
+            <h1>Vite Plugin</h1>
+            <p>The Vite plugin handles serving components in development and optimizing them for production.</p>
+
+            <h2>Installation</h2>
+            <pre><code>npm install -D vite-plugin-alpine-components</code></pre>
+
+            <h2>Configuration</h2>
+            <pre><code>// vite.config.js
+import { defineConfig } from 'vite';
+import { componentAssetsPlugin } from 'vite-plugin-alpine-components';
+
+export default defineConfig({
+    plugins: [
+        componentAssetsPlugin({
+            src: 'src/components',  // Where component files live
+            dest: 'components'      // URL path to serve them at
+        })
+    ]
+});</code></pre>
+
+            <h2>Options</h2>
+            <div class="api-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>src</code></td>
+                            <td><code>'src/components'</code></td>
+                            <td>Source directory containing component folders</td>
+                        </tr>
+                        <tr>
+                            <td><code>dest</code></td>
+                            <td><code>'components'</code></td>
+                            <td>URL path prefix where components are served</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>Development Mode</h2>
+            <p>In development, the plugin:</p>
+            <ul>
+                <li>Serves component files from <code>src</code> at the <code>dest</code> URL path</li>
+                <li>Injects <code>.loading.html</code> content into your HTML</li>
+                <li>Enables hot reloading when component files change</li>
+            </ul>
+
+            <h2>Production Build</h2>
+            <p>When building for production:</p>
+            <ul>
+                <li><strong>HTML minification</strong> — Whitespace and comments removed</li>
+                <li><strong>JS minification</strong> — Terser compression and mangling</li>
+                <li><strong>Source maps</strong> — Generated for debugging</li>
+                <li><strong>Loading files excluded</strong> — <code>.loading.html</code> files are only used at build time</li>
+            </ul>
+
+            <h2>Directory Structure</h2>
+            <p>Recommended project layout:</p>
+
+            <div class="file-tree">
+                project/<br>
+                ├── src/<br>
+                │&nbsp;&nbsp;&nbsp;├── components/<br>
+                │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── modal/<br>
+                │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── modal.html<br>
+                │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── modal.js<br>
+                │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── modal.loading.html<br>
+                │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── card/<br>
+                │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── card.html<br>
+                │&nbsp;&nbsp;&nbsp;└── main.js<br>
+                ├── index.html<br>
+                └── vite.config.js
+            </div>
+
+            <h2>With Custom Base Path</h2>
+            <p>If your app is deployed to a subdirectory:</p>
+
+            <pre><code>// vite.config.js
+export default defineConfig({
+    base: '/my-app/',
+    plugins: [
+        componentAssetsPlugin({
+            src: 'src/components',
+            dest: 'components'
+        })
+    ]
+});
+
+// main.js
+AlpineComponent.setBase(`${import.meta.env.BASE_URL}components`);</code></pre>
+        </section>
+
+        {{> footer}}
+    </main>
+</body>
+</html>

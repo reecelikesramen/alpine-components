@@ -1,46 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <title>Alpine Components</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-    <script type="module" src="/src/main.js"></script>
+    {{> head}}
 </head>
-
 <body>
     <main class="container" x-data>
-        <h1>Alpine Components Demo</h1>
+        <!-- Hero -->
+        <header class="hero">
+            <h1>Alpine Components</h1>
+            <p class="tagline">Lazy-loaded components with slots for Alpine.js</p>
+            <div class="install-snippet">npm install alpine-components</div>
+        </header>
 
-        <section>
-            <h2>Default Modal</h2>
-            <div x-component="modal"></div>
-        </section>
+        {{> nav}}
 
+        <!-- Features -->
         <section>
-            <h2>Custom Modal</h2>
-            <div x-component="modal">
-                <slot name="trigger">
-                    <button x-bind="trigger" class="outline">Custom Trigger</button>
-                </slot>
-                <slot name="header">
-                    <p><strong>🗓️ Thank You for Registering!</strong></p>
-                </slot>
-                <slot name="body">
-                    <p>
-                        We're excited to have you join us for our
-                        upcoming event. Please arrive at the museum
-                        on time to check in and get started.
-                    </p>
-                </slot>
-                <slot name="footer">
-                    <button class="secondary" x-bind="closeButton">Maybe Later</button>
-                    <button x-bind="closeButton">I'll Be There!</button>
-                </slot>
+            <div class="strategy-grid">
+                <article class="strategy-card">
+                    <h3>Lazy Loading</h3>
+                    <p>Load components on-demand with eager, visible, or event-based strategies. Only fetch what you need, when you need it.</p>
+                    <a href="loading-strategies">Learn more →</a>
+                </article>
+
+                <article class="strategy-card">
+                    <h3>Slots</h3>
+                    <p>Customize component content with named slots—just like Vue or Web Components. Define defaults, override as needed.</p>
+                    <a href="slots">Learn more →</a>
+                </article>
+
+                <article class="strategy-card">
+                    <h3>Loading States</h3>
+                    <p>Show placeholders while components load. Create skeleton UIs with a simple <code>.loading.html</code> file.</p>
+                    <a href="loading-states">Learn more →</a>
+                </article>
             </div>
         </section>
+
+        <!-- Quick Example -->
+        <section>
+            <h2>Quick Example</h2>
+
+            <pre><code>// Register a component
+AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
+
+// Use it in your HTML
+&lt;div x-component="modal"&gt;
+    &lt;slot name="header"&gt;Custom Title&lt;/slot&gt;
+&lt;/div&gt;</code></pre>
+
+            <h3>Live Demo</h3>
+            <div class="demo-container">
+                <div class="demo-preview">
+                    <div x-component="modal"></div>
+                </div>
+            </div>
+
+            <p><a href="guide">Get started with the full guide →</a></p>
+        </section>
+
+        <!-- Installation -->
+        <section>
+            <h2>Installation</h2>
+
+            <pre><code>npm install alpine-components alpinejs</code></pre>
+
+            <p>For the Vite plugin (recommended):</p>
+
+            <pre><code>npm install -D vite-plugin-alpine-components</code></pre>
+
+            <p><a href="vite-plugin">Configure the Vite plugin →</a></p>
+        </section>
+
+        {{> footer}}
     </main>
 </body>
-
 </html>
-

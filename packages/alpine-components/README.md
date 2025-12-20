@@ -31,6 +31,23 @@ Alpine.start();
 </div>
 ```
 
+## Loading Strategies
+
+Control when components load using modifiers:
+
+```html
+<!-- Eager (default) - loads immediately -->
+<div x-component="modal"></div>
+<div x-component.eager="modal"></div>
+
+<!-- Visible - loads when element enters viewport -->
+<div x-component.visible="modal"></div>
+<div x-component.visible.100px="modal"></div>  <!-- with root margin -->
+
+<!-- Event - loads on custom event -->
+<div x-component.event.openModal="modal"></div>
+```
+
 ## API
 
 ### `AlpineComponent.setBase(base)`

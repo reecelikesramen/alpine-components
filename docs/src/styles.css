@@ -1,0 +1,277 @@
+/* Alpine Components Docs - Pico CSS Overrides */
+
+:root {
+  --pico-font-size: 100%;
+}
+
+/* Hero section */
+.hero {
+  text-align: center;
+  padding: 4rem 0 2rem;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero .tagline {
+  font-size: 1.25rem;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+.hero .install-snippet {
+  display: inline-block;
+  background: var(--pico-code-background-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--pico-border-radius);
+  font-family: var(--pico-font-family-monospace);
+  font-size: 1rem;
+}
+
+/* Section styling */
+section {
+  margin-bottom: 3rem;
+  scroll-margin-top: 2rem;
+}
+
+section h2 {
+  border-bottom: 1px solid var(--pico-muted-border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Code blocks */
+pre {
+  position: relative;
+  margin: 1rem 0;
+}
+
+pre code {
+  display: block;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--pico-code-background-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--pico-border-radius) var(--pico-border-radius) 0 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.code-header + pre {
+  margin-top: 0;
+  border-radius: 0 0 var(--pico-border-radius) var(--pico-border-radius);
+}
+
+.copy-btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* Demo component */
+.demo-container {
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  margin: 1.5rem 0;
+}
+
+.demo-preview {
+  padding: 1.5rem;
+  background: var(--pico-background-color);
+}
+
+.demo-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--pico-muted-background-color);
+  border-top: 1px solid var(--pico-muted-border-color);
+}
+
+.demo-toolbar button {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.demo-source {
+  border-top: 1px solid var(--pico-muted-border-color);
+}
+
+.demo-source pre {
+  margin: 0;
+  border-radius: 0;
+}
+
+/* Tabs */
+.tabs {
+  margin-bottom: 1.5rem;
+}
+
+.tabs nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--pico-muted-border-color);
+  margin-bottom: 1rem;
+}
+
+.tabs nav button {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+
+.tabs nav button:hover {
+  opacity: 1;
+}
+
+.tabs nav button.active {
+  opacity: 1;
+  border-bottom-color: var(--pico-primary);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* Image placeholders */
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pico-muted-background-color);
+  border: 2px dashed var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  padding: 3rem 2rem;
+  margin: 1.5rem 0;
+  color: var(--pico-muted-color);
+  font-style: italic;
+}
+
+/* Strategy cards */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.strategy-card {
+  padding: 1.5rem;
+  background: var(--pico-card-background-color);
+  border-radius: var(--pico-border-radius);
+  border: 1px solid var(--pico-muted-border-color);
+}
+
+.strategy-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.strategy-card code {
+  font-size: 0.9rem;
+}
+
+/* API table */
+.api-table {
+  overflow-x: auto;
+}
+
+.api-table table {
+  width: 100%;
+}
+
+.api-table code {
+  white-space: nowrap;
+}
+
+/* Navigation */
+.docs-nav {
+  position: sticky;
+  top: 0;
+  background: var(--pico-background-color);
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  z-index: 100;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+.docs-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.docs-nav a {
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+/* File tree */
+.file-tree {
+  font-family: var(--pico-font-family-monospace);
+  font-size: 0.9rem;
+  background: var(--pico-code-background-color);
+  padding: 1rem;
+  border-radius: var(--pico-border-radius);
+  line-height: 1.6;
+}
+
+/* Footer */
+footer {
+  margin-top: 4rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--pico-muted-border-color);
+  text-align: center;
+  opacity: 0.7;
+}
+
+/* Loading state demo */
+.loading-demo {
+  min-height: 100px;
+  position: relative;
+}
+
+/* Slot comparison */
+.slot-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .slot-comparison {
+    grid-template-columns: 1fr;
+  }
+}
+
+.slot-comparison > div {
+  padding: 1rem;
+  background: var(--pico-card-background-color);
+  border-radius: var(--pico-border-radius);
+  border: 1px solid var(--pico-muted-border-color);
+}
+
+.slot-comparison h5 {
+  margin-top: 0;
+}

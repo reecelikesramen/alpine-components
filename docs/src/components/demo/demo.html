@@ -1,0 +1,14 @@
+<template>
+<div x-data="demo" class="demo-container">
+    <div class="demo-preview">
+        <slot name="preview"></slot>
+    </div>
+    <div class="demo-toolbar">
+        <button class="outline secondary" @click="showSource = !showSource" x-text="showSource ? 'Hide Code' : 'Show Code'"></button>
+        <button class="outline secondary" @click="copy" x-text="copied ? 'Copied!' : 'Copy Code'"></button>
+    </div>
+    <div class="demo-source" x-show="showSource" x-collapse>
+        <pre><code x-ref="source"><slot name="source"></slot></code></pre>
+    </div>
+</div>
+</template>

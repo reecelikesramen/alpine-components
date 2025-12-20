@@ -8,12 +8,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@alpinejs/collapse": "^3.15.3",
     "alpine-components": "workspace:*",
-    "alpinejs": "^3.15.3"
+    "alpinejs": "^3.15.3",
+    "async-alpine": "^2.0.3"
   },
   "devDependencies": {
+    "vite": "^6.0.0",
     "vite-plugin-alpine-components": "workspace:*",
-    "vite": "^6.0.0"
+    "vite-plugin-handlebars": "^2.0.0"
   }
 }
-

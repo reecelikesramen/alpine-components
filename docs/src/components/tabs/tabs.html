@@ -1,0 +1,20 @@
+<template>
+<div x-data="tabs" class="tabs">
+    <nav>
+        <template x-for="(label, index) in labels" :key="index">
+            <button 
+                :class="{ active: activeTab === index }"
+                @click="activeTab = index"
+                x-text="label">
+            </button>
+        </template>
+    </nav>
+    <div class="tab-panels">
+        <slot name="panel-0"></slot>
+        <slot name="panel-1"></slot>
+        <slot name="panel-2"></slot>
+        <slot name="panel-3"></slot>
+        <slot name="panel-4"></slot>
+    </div>
+</div>
+</template>

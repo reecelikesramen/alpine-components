@@ -1,0 +1,55 @@
+---
+description: Reminder to add documentation TODOs when adding new features
+globs:
+  - packages/**/*.js
+  - packages/**/*.ts
+---
+
+# Documentation Update Reminder
+
+When modifying files in the `packages/` directory:
+
+## For New Features
+
+If you are adding a new feature, API method, configuration option, or loading strategy:
+
+1. **Add a TODO comment** in the code pointing to the documentation need:
+   ```js
+   // TODO: Document in docs/index.html - [brief description]
+   ```
+
+2. **Create a TODO task** for the documentation update:
+   - Feature name and what it does
+   - Which section of docs/index.html it belongs in
+   - Any code examples needed
+   - Whether screenshots/recordings are required
+
+## Documentation Sections Reference
+
+The docs are structured as follows in `docs/index.html`:
+
+- **Quick Start** - Installation and basic setup
+- **Loading Strategies** - eager, visible, event modifiers
+- **Slots** - Default and named slot usage
+- **Loading States** - The .loading.html feature
+- **Vite Plugin** - Plugin configuration options
+- **API Reference** - Full method/option documentation
+
+## Checklist for New Features
+
+- [ ] Add inline code comments explaining the feature
+- [ ] Update relevant README.md in the package
+- [ ] Add documentation TODO for docs/index.html
+- [ ] Consider if demo/example is needed
+- [ ] Note if screenshot/recording placeholder is required
+
+## Example TODO Format
+
+When adding a new loading strategy called "idle":
+
+```js
+// TODO: Document 'idle' strategy in docs/index.html#loading-strategies
+// - Uses requestIdleCallback to load during browser idle time
+// - Usage: x-component.idle="modal"
+// - Needs demo recording showing load timing
+```

@@ -1,0 +1,33 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{#if pageTitle}}{{pageTitle}} - {{/if}}Alpine Components</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+<link rel="stylesheet" href="/src/styles.css">
+<script type="module" src="/src/main.js"></script>
+<style>
+    [x-cloak] {
+        display: none !important;
+    }
+</style>
+<script type="speculationrules">
+{
+    "prefetch": [
+        {
+            "source": "document",
+            "where": {
+                "selector_matches": "a[href]:not([href^='http']):not([href^='#']):not([href^='mailto:'])"
+            },
+            "eagerness": "immediate"
+        }
+    ],
+    "prerender": [
+        {
+            "source": "document",
+            "where": {
+                "selector_matches": "a[href]:not([href^='http']):not([href^='#']):not([href^='mailto:'])"
+            },
+            "eagerness": "moderate"
+        }
+    ]
+}
+</script>
