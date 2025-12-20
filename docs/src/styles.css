@@ -10,22 +10,24 @@
   --ac-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
 
-  /* High-desert palette (OKLCH) */
-  --ac-paper: oklch(0.975 0.015 85); /* warm off-white */
-  --ac-ink: oklch(0.24 0.02 40); /* warm near-black */
-  --ac-ink-muted: oklch(0.42 0.02 40);
+  /* Santa Fe palette (OKLCH tuned from sampled swatches) */
+  --ac-paper: oklch(0.93 0.015 45); /* warm plaster */
+  --ac-ink: oklch(0.18 0.03 30); /* warm near-black */
+  --ac-ink-muted: oklch(0.45 0.02 35);
 
-  --ac-sand: oklch(0.945 0.02 80);
-  --ac-sand-2: oklch(0.92 0.03 75);
-  --ac-border: oklch(0.86 0.02 75);
+  --ac-sand: oklch(0.90 0.03 55); /* sun-baked sand */
+  --ac-sand-2: oklch(0.87 0.03 55);
+  --ac-border: oklch(0.80 0.02 55); /* stone */
 
-  --ac-ochre: oklch(0.56 0.17 55); /* Santa-Fe orange (AA on paper) */
-  --ac-ochre-hover: oklch(0.52 0.18 55);
-  --ac-clay: oklch(0.58 0.16 32); /* adobe red */
-  --ac-sage: oklch(0.62 0.10 145); /* restrained green */
+  --ac-ochre: oklch(0.52 0.15 28); /* terracotta (AA on plaster) */
+  --ac-ochre-hover: oklch(0.48 0.16 28);
+  --ac-clay: oklch(0.42 0.08 10); /* deep adobe/wine */
+  --ac-turquoise: oklch(0.48 0.11 239); /* Santa Fe turquoise */
+  --ac-sage: oklch(0.55 0.06 120); /* mesquite green */
+  --ac-sun: oklch(0.72 0.16 48); /* sunset accent */
 
-  --ac-code-bg: oklch(0.94 0.02 85);
-  --ac-code-border: oklch(0.86 0.02 85);
+  --ac-code-bg: oklch(0.95 0.01 206); /* cool wash */
+  --ac-code-border: color-mix(in oklch, var(--ac-border) 70%, var(--ac-code-bg));
 
   /* Pico mappings */
   --pico-font-size: 100%;
@@ -37,15 +39,17 @@
   --pico-muted-color: var(--ac-ink-muted);
   --pico-muted-border-color: var(--ac-border);
   --pico-muted-background-color: var(--ac-sand);
-  --pico-card-background-color: var(--ac-sand);
+  --pico-card-background-color: var(--ac-sand-2);
 
   --pico-code-background-color: var(--ac-code-bg);
   --pico-code-color: var(--ac-ink);
 
   --pico-primary: var(--ac-ochre);
   --pico-primary-hover: var(--ac-ochre-hover);
-  --pico-primary-focus: color-mix(in oklch, var(--ac-ochre) 35%, transparent);
-  --pico-secondary: var(--ac-sage);
+  --pico-primary-focus: color-mix(in oklch, var(--ac-sun) 35%, transparent);
+  --pico-secondary: var(--ac-turquoise);
+  --pico-secondary-hover: color-mix(in oklch, var(--ac-turquoise) 85%, white);
+  --pico-secondary-focus: color-mix(in oklch, var(--ac-turquoise) 35%, transparent);
 
   --pico-border-radius: 0.85rem;
 }
@@ -72,21 +76,23 @@ a {
 
 /* Dark theme tokens */
 html[data-theme="dark"] {
-  --ac-paper: oklch(0.18 0.015 55);
-  --ac-ink: oklch(0.93 0.015 85);
-  --ac-ink-muted: oklch(0.76 0.02 85);
+  --ac-paper: oklch(0.16 0.02 28);
+  --ac-ink: oklch(0.90 0.02 45);
+  --ac-ink-muted: oklch(0.74 0.02 50);
 
-  --ac-sand: oklch(0.22 0.015 55);
-  --ac-sand-2: oklch(0.26 0.015 55);
-  --ac-border: oklch(0.34 0.015 55);
+  --ac-sand: oklch(0.22 0.02 40);
+  --ac-sand-2: oklch(0.26 0.02 40);
+  --ac-border: oklch(0.32 0.015 40);
 
-  --ac-ochre: oklch(0.74 0.16 55);
-  --ac-ochre-hover: oklch(0.79 0.16 55);
-  --ac-clay: oklch(0.70 0.15 32);
-  --ac-sage: oklch(0.72 0.10 145);
+  --ac-ochre: oklch(0.68 0.14 35);
+  --ac-ochre-hover: oklch(0.74 0.14 40);
+  --ac-clay: oklch(0.66 0.12 20);
+  --ac-turquoise: oklch(0.78 0.09 226);
+  --ac-sage: oklch(0.72 0.07 120);
+  --ac-sun: oklch(0.72 0.16 48);
 
-  --ac-code-bg: oklch(0.21 0.015 55);
-  --ac-code-border: oklch(0.34 0.015 55);
+  --ac-code-bg: oklch(0.20 0.02 40);
+  --ac-code-border: color-mix(in oklch, var(--ac-border) 70%, var(--ac-code-bg));
 }
 
 /* Hero section */
