@@ -1,5 +1,4 @@
 import Fuse from 'fuse.js';
-import searchIndex from './index.json';
 
 const slugify = (s) =>
   String(s ?? '')
@@ -26,27 +25,22 @@ function ensureHeadingIds() {
   }
 }
 
-function createSearchStore(index) {
-  const fuse = new Fuse(index.items, {
-    includeScore: true,
-    threshold: 0.35,
-    ignoreLocation: true,
-    keys: [
-      { name: 'title', weight: 0.55 },
-      { name: 'pageTitle', weight: 0.25 },
-      { name: 'content', weight: 0.2 }
-    ]
-  });
-
+function createSearchStore() {
   return {
     isOpen: false,
     query: '',
     results: [],
     activeIndex: 0,
+    isLoading: false,
+    isReady: false,
+    error: null,
+    _fuse: null,
 
-    init() {
+    async init() {
       // Stable anchors for cross-page search links
       ensureHeadingIds();
+
+      await this._loadIndex();
 
       window.addEventListener('keydown', (e) => {
         const isK = (e.key || '').toLowerCase() === 'k';
@@ -56,6 +50,38 @@ function createSearchStore(index) {
         e.preventDefault();
         this.open();
       });
+    },
+
+    async _loadIndex() {
+      this.isLoading = true;
+      this.isReady = false;
+      this.error = null;
+
+      try {
+        const base = import.meta.env.BASE_URL || '/';
+        const url = `${base}search/index.json`;
+        const res = await fetch(url, { cache: 'no-cache' });
+        if (!res.ok) throw new Error(`Failed to load search index (${res.status})`);
+        const index = await res.json();
+
+        this._fuse = new Fuse(index.items ?? [], {
+          includeScore: true,
+          threshold: 0.35,
+          ignoreLocation: true,
+          keys: [
+            { name: 'title', weight: 0.55 },
+            { name: 'pageTitle', weight: 0.25 },
+            { name: 'content', weight: 0.2 }
+          ]
+        });
+
+        this.isReady = true;
+      } catch (e) {
+        this.error = e?.message || String(e);
+        this._fuse = null;
+      } finally {
+        this.isLoading = false;
+      }
     },
 
     open() {
@@ -81,7 +107,13 @@ function createSearchStore(index) {
         return;
       }
 
-      this.results = fuse.search(q).slice(0, 12).map((r) => r.item);
+      if (!this._fuse) {
+        this.results = [];
+        this.activeIndex = 0;
+        return;
+      }
+
+      this.results = this._fuse.search(q).slice(0, 12).map((r) => r.item);
       this.activeIndex = 0;
     },
 
@@ -103,7 +135,7 @@ function createSearchStore(index) {
 }
 
 export function registerSearch(Alpine) {
-  Alpine.store('search', createSearchStore(searchIndex));
+  Alpine.store('search', createSearchStore());
   Alpine.store('search').init();
 }
 

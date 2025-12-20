@@ -3,7 +3,10 @@ import path from 'node:path';
 
 const repoRoot = path.resolve(new URL('.', import.meta.url).pathname, '..', '..');
 const docsRoot = path.join(repoRoot, 'docs');
-const outFile = path.join(docsRoot, 'src', 'search', 'index.json');
+// Generate directly into `dist/` so it's not committed (dist/ is gitignored).
+// Also write to `public/` for dev mode (public/search/ is gitignored).
+const distFile = path.join(docsRoot, 'dist', 'search', 'index.json');
+const publicFile = path.join(docsRoot, 'public', 'search', 'index.json');
 
 const pages = [
   { slug: 'guide', file: 'guide.html' },
@@ -106,10 +109,16 @@ async function main() {
     items
   };
 
-  await fs.mkdir(path.dirname(outFile), { recursive: true });
-  await fs.writeFile(outFile, JSON.stringify(payload, null, 2) + '\n', 'utf8');
+  // Write to dist/ for production builds
+  await fs.mkdir(path.dirname(distFile), { recursive: true });
+  await fs.writeFile(distFile, JSON.stringify(payload, null, 2) + '\n', 'utf8');
+  
+  // Also write to public/ for dev mode (Vite serves from public/)
+  await fs.mkdir(path.dirname(publicFile), { recursive: true });
+  await fs.writeFile(publicFile, JSON.stringify(payload, null, 2) + '\n', 'utf8');
+  
   // eslint-disable-next-line no-console
-  console.log(`Wrote ${items.length} search entries to ${path.relative(repoRoot, outFile)}`);
+  console.log(`Wrote ${items.length} search entries to ${path.relative(repoRoot, distFile)}`);
 }
 
 await main();

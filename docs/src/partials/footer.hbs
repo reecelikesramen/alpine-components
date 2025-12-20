@@ -51,6 +51,12 @@
                     </a>
                 </li>
             </template>
+            <li x-show="$store.search.isLoading" class="docs-search-empty">
+                Loading search index…
+            </li>
+            <li x-show="$store.search.error" class="docs-search-empty">
+                Search unavailable: <span x-text="$store.search.error"></span>
+            </li>
             <li x-show="$store.search.query && !$store.search.results.length" class="docs-search-empty">
                 No results.
             </li>
