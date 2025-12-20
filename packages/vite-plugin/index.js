@@ -40,15 +40,22 @@ export function componentAssetsPlugin(options = {}) {
   async function getLoadingHtml(componentName) {
     if (loadingCache.has(componentName)) return loadingCache.get(componentName);
 
-    const loadingPath = join(rootDir, src, componentName, `${componentName}.loading.html`);
-    try {
-      const content = await readFile(loadingPath, 'utf-8');
-      loadingCache.set(componentName, content.trim());
-      return content.trim();
-    } catch {
-      loadingCache.set(componentName, null);
-      return null;
+    const kebabName = componentName.replace(/[A-Z]/g, l => `-${l.toLowerCase()}`).replace(/^-/, '');
+    const namesToTry = [componentName, kebabName];
+
+    for (const name of namesToTry) {
+      const loadingPath = join(rootDir, src, name, `${name}.loading.html`);
+      try {
+        const content = await readFile(loadingPath, 'utf-8');
+        loadingCache.set(componentName, content.trim());
+        return content.trim();
+      } catch {
+        // Continue to try next name
+      }
     }
+
+    loadingCache.set(componentName, null);
+    return null;
   }
 
   async function injectLoadingHtml(html) {

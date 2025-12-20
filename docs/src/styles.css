@@ -24,7 +24,7 @@
   --ac-light-ink: oklch(0.25 0.04 40); /* Warm charcoal text */
   --ac-light-ink-muted: oklch(0.45 0.04 40);
   --ac-light-border: oklch(0.85 0.04 85);
-  --ac-light-code-bg: oklch(0.20 0.03 40); /* Dark "Night Sky" background for code in light mode */
+  --ac-light-code-bg: oklch(0.95 0.02 85); /* Light "Desert Sand" background for code in light mode */
 
   /* DARK MODE TOKENS - Refined for deeper, richer contrast */
   /* Using Deep Mesquite/Charcoal base instead of warm brown to avoid "orange mud" */
@@ -125,6 +125,10 @@ a:hover {
   border-bottom: 1px solid var(--ac-border);
 }
 
+.hero .install-snippet {
+    margin-bottom: 2rem;
+}
+
 .hero h1 {
   font-size: 3.5rem;
   margin-bottom: 0.5rem;
@@ -152,7 +156,7 @@ a:hover {
   gap: 0.75rem;
   border: 1px solid var(--ac-border);
   background: var(--ac-code-bg);
-  color: #d4be98; /* Gruvbox light fg match approx */
+  color: var(--ac-ink);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-family: var(--ac-font-mono);
@@ -160,12 +164,16 @@ a:hover {
   cursor: pointer;
   user-select: none;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
 }
 
 .cmd-ticker code {
     color: inherit;
     background: transparent;
     padding: 0;
+    white-space: nowrap;
 }
 
 .cmd-ticker:focus-visible {
@@ -178,6 +186,7 @@ a:hover {
   overflow: hidden;
   height: 1.5em;
   text-align: left;
+  flex: 1;
 }
 
 .cmd-ticker__track {
@@ -185,10 +194,21 @@ a:hover {
   transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.cmd-ticker__track--no-transition {
+  transition: none !important;
+}
+
 .cmd-ticker__line {
   height: 1.5em;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+}
+
+.cmd-ticker__caret {
+  opacity: 0.5;
+  color: var(--ac-primary);
+  user-select: none;
 }
 
 .cmd-ticker__hint {
@@ -212,6 +232,7 @@ a:hover {
   padding: 1.5rem 0;
   margin-bottom: 3rem;
   border-bottom: 1px solid var(--ac-border);
+  gap: 1rem;
 }
 
 .docs-nav__links {
@@ -220,6 +241,14 @@ a:hover {
   list-style: none;
   padding: 0;
   margin: 0;
+  flex-wrap: wrap; /* Added for responsiveness */
+}
+
+@media (max-width: 1200px) {
+  .docs-nav__links {
+    gap: 0.75rem;
+    font-size: 0.95rem;
+  }
 }
 
 .docs-nav__links li {
@@ -261,6 +290,17 @@ section {
   scroll-margin-top: 2rem;
 }
 
+.slot-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin: 2rem 0;
+}
+
+.slot-example h4 {
+  margin-bottom: 1.5rem;
+}
+
 section h2 {
   border-bottom: 2px solid var(--ac-border);
   padding-bottom: 0.75rem;
@@ -271,11 +311,12 @@ section h2 {
 /* Code blocks (Highlight.js overrides) */
 pre {
   background: var(--ac-code-bg) !important;
-  color: #d4be98; /* Force light text for unhighlighted/plain content */
+  /* Removed explicit color to allow highlight.js to apply its own token colors */
   border-radius: 8px;
   border: 1px solid var(--ac-border);
   margin: 1.5rem 0;
-  overflow: hidden; /* Ensure rounded corners clip */
+  overflow-x: auto; /* Changed to auto to allow scrolling */
+  max-width: 100%;
 }
 
 pre code.hljs {
@@ -397,6 +438,12 @@ pre code.hljs {
   padding: 3rem 2rem;
 }
 
+@media (max-width: 600px) {
+  .docs-main .container {
+    padding: 2rem 1rem;
+  }
+}
+
 /* Search Modal */
 .docs-search-overlay {
   position: fixed;
@@ -420,13 +467,13 @@ pre code.hljs {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: 60vh;
+  max-height: 80vh; /* Increased from 60vh */
 }
 
 .docs-search-panel input {
   width: 100%;
-  padding: 1.25rem;
-  font-size: 1.1rem;
+  padding: 1.5rem; /* Increased from 1.25rem */
+  font-size: 1.2rem; /* Increased from 1.1rem */
   border: none;
   border-bottom: 1px solid var(--ac-border);
   background: transparent;
@@ -435,6 +482,7 @@ pre code.hljs {
 }
 
 .docs-search-results {
+  flex: 1; /* Take up remaining space */
   overflow-y: auto;
   padding: 0;
   margin: 0;
@@ -443,38 +491,56 @@ pre code.hljs {
 
 .docs-search-result {
   display: block;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.5rem; /* Increased padding */
   border-bottom: 1px solid var(--ac-border);
   text-decoration: none;
   color: var(--ac-ink);
+  transition: background 0.1s;
 }
 
 .docs-search-result:hover,
 .docs-search-result.active {
   background: var(--ac-sand);
   border-left: 4px solid var(--ac-primary);
-  padding-left: calc(1.25rem - 4px);
+  padding-left: calc(1.5rem - 4px);
 }
 
 .docs-search-result__title {
   font-weight: 700;
   color: var(--ac-primary);
+  font-size: 1.1rem;
 }
 
 .docs-search-result__meta {
-  font-size: 0.85rem;
-  opacity: 0.7;
+  font-size: 0.9rem;
+  opacity: 0.8;
   margin-top: 0.25rem;
+  color: var(--ac-ink-muted);
 }
 
 .docs-search-hint {
-  padding: 0.75rem 1.25rem;
+  padding: 1rem 1.5rem;
   background: var(--ac-sand);
   border-top: 1px solid var(--ac-border);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   display: flex;
-  gap: 1rem;
-  color: var(--ac-ink-muted);
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  gap: 1.5rem;
+  color: var(--ac-ink);
+  font-weight: 500;
+}
+
+.docs-search-hint div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.docs-search-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--ac-ink-muted);
 }
 
 /* File tree */
@@ -490,8 +556,27 @@ pre code.hljs {
 /* Strategy cards */
 .strategy-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
+}
+
+@media (max-width: 1280px) {
+  .strategy-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .strategy-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Specific fix for 3 cards in 2x2 layout - make the last one span full width */
+@media (min-width: 769px) and (max-width: 1280px) {
+  .strategy-grid article:nth-child(3):last-child {
+    grid-column: span 2;
+  }
 }
 
 .strategy-card {
@@ -533,6 +618,42 @@ footer {
     position: static;
     border-right: none;
     border-bottom: 1px solid var(--ac-border);
+    padding: 1rem 1.5rem;
+  }
+
+  .docs-sidebar__top {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .docs-brand {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+  }
+
+  .docs-sidebar__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: auto;
+  }
+
+  .docs-sidebar__nav {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ac-border);
+  }
+
+  .docs-sidebar__nav a {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
   }
   
   /* Responsive Home Nav */

@@ -1,0 +1,32 @@
+<div class="docs-nav__actions-loading">
+    <div class="docs-action-skeleton"></div>
+    <div class="docs-action-skeleton"></div>
+</div>
+
+<style>
+.docs-nav__actions-loading {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.docs-action-skeleton {
+    width: 80px;
+    height: 34px;
+    background: var(--ac-sand);
+    border: 1px solid var(--ac-border);
+    border-radius: 6px;
+    opacity: 0.5;
+}
+
+@media (max-width: 900px) {
+    .docs-nav__actions-loading {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+    }
+    .docs-action-skeleton {
+        width: 100%;
+    }
+}
+</style>
+

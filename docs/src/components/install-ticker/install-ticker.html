@@ -3,19 +3,24 @@
     class="install-snippet cmd-ticker"
     role="button"
     tabindex="0"
-    x-data="installTicker"
     @click="next()"
     @keydown.enter.prevent="next()"
     @keydown.space.prevent="next()"
     aria-label="Install command (click to switch between npm, pnpm, and yarn)"
 >
     <span class="cmd-ticker__viewport" aria-hidden="true">
-        <span class="cmd-ticker__track" :style="`transform: translateY(-${index * 1.5}em)`">
-            <template x-for="cmd in commands" :key="cmd">
-                <span class="cmd-ticker__line"><code x-text="cmd"></code></span>
+        <span 
+            class="cmd-ticker__track" 
+            :class="{ 'cmd-ticker__track--no-transition': !isTransitioning }"
+            :style="`transform: translateY(-${index * 1.5}em)`"
+        >
+            <template x-for="(cmd, i) in commands" :key="i">
+                <span class="cmd-ticker__line">
+                    <span class="cmd-ticker__caret">$</span>
+                    <code class="language-bash hljs" x-html="window.hljs ? window.hljs.highlight(cmd, { language: 'bash' }).value : cmd"></code>
+                </span>
             </template>
         </span>
     </span>
 </div>
 </template>
-
