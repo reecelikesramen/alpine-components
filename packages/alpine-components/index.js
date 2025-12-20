@@ -1,10 +1,7 @@
-import Alpine from 'alpinejs';
-import AsyncAlpine from 'async-alpine';
-
-Alpine.plugin(AsyncAlpine);
-
-// --- AlpineComponent Plugin ---
-const AlpineComponent = {
+/**
+ * AlpineComponent - Lazy-loaded components with slots for Alpine.js
+ */
+export const AlpineComponent = {
     _registry: new Map(),
     _cache: new Map(),
     _jsModules: new Map(),
@@ -44,8 +41,8 @@ const AlpineComponent = {
 
         const promise = import(/* @vite-ignore */ path).then(module => {
             const fn = module.default;
-            if (!Alpine._data || !Alpine._data[name]) {
-                Alpine.data(name, fn);
+            if (!this._Alpine._data || !this._Alpine._data[name]) {
+                this._Alpine.data(name, fn);
             }
             return fn;
         });
@@ -65,7 +62,11 @@ const AlpineComponent = {
     }
 };
 
-function AlpineComponentPlugin(Alpine) {
+/**
+ * Alpine.js plugin for x-component directive
+ */
+export function AlpineComponentPlugin(Alpine) {
+    AlpineComponent._Alpine = Alpine;
     const ignoreAttr = Alpine.prefixed('ignore');
 
     // Sync handler: runs immediately to prevent tree walking
@@ -155,10 +156,4 @@ function AlpineComponentPlugin(Alpine) {
 
     Alpine.directive('component', asyncHandler).before('ignore');
 }
-// --- End AlpineComponent Plugin ---
-AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
 
-Alpine.plugin(AlpineComponentPlugin);
-
-
-Alpine.start();

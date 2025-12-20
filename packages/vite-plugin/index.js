@@ -59,7 +59,7 @@ export function componentAssetsPlugin(options = {}) {
   }
 
   return {
-    name: 'component-assets',
+    name: 'vite-plugin-alpine-components',
 
     configResolved(config) {
       rootDir = config.root;

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { componentAssetsPlugin } from './vite-plugin-component-assets.js';
+import { componentAssetsPlugin } from 'vite-plugin-alpine-components';
 
 export default defineConfig({
   plugins: [
@@ -9,12 +9,7 @@ export default defineConfig({
     })
   ],
   build: {
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        preserveModules: false
-      }
-    }
+    sourcemap: true
   }
 });
 

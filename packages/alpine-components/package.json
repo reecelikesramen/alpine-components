@@ -1,0 +1,30 @@
+{
+  "name": "alpine-components",
+  "version": "0.1.0",
+  "description": "Lazy-loaded components with slots for Alpine.js",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "alpine",
+    "alpinejs",
+    "components",
+    "lazy-loading"
+  ],
+  "author": "Reece Holmdahl",
+  "license": "MIT",
+  "peerDependencies": {
+    "alpinejs": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reeceholmdahl/alpine-components.git",
+    "directory": "packages/alpine-components"
+  }
+}
+

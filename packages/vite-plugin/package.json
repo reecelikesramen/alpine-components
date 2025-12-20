@@ -1,0 +1,35 @@
+{
+  "name": "vite-plugin-alpine-components",
+  "version": "0.1.0",
+  "description": "Vite plugin for alpine-components: serves, minifies, and injects loading states",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "alpine",
+    "alpinejs",
+    "components"
+  ],
+  "author": "Reece Holmdahl",
+  "license": "MIT",
+  "peerDependencies": {
+    "vite": "^5.0.0 || ^6.0.0"
+  },
+  "dependencies": {
+    "html-minifier-terser": "^7.2.0",
+    "terser": "^5.37.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reeceholmdahl/alpine-components.git",
+    "directory": "packages/vite-plugin"
+  }
+}
+
