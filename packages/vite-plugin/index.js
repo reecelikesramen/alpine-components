@@ -1,5 +1,5 @@
 import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises';
-import { join, relative, dirname } from 'node:path';
+import { join, relative, dirname, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { minify as minifyHtml } from 'html-minifier-terser';
 import { minify as minifyJs } from 'terser';
@@ -27,6 +27,7 @@ export function componentAssetsPlugin(options = {}) {
   const { src = 'src/components', dest = 'components' } = options;
 
   let rootDir;
+  let outDirRoot;
   let isBuild = false;
   let basePath = '/';
 
@@ -72,6 +73,7 @@ export function componentAssetsPlugin(options = {}) {
 
     configResolved(config) {
       rootDir = config.root;
+      outDirRoot = config.build.outDir;
       isBuild = config.command === 'build';
       basePath = config.base || '/';
     },
@@ -116,8 +118,8 @@ export function componentAssetsPlugin(options = {}) {
     async closeBundle() {
       if (!isBuild) return;
 
-      const srcDir = join(rootDir, src);
-      const outDir = join(rootDir, 'dist', dest);
+      const srcDir = resolve(rootDir, src);
+      const outDir = resolve(rootDir, outDirRoot, dest);
 
       await processDirectory(srcDir, outDir, srcDir, manifest);
 
@@ -125,7 +127,7 @@ export function componentAssetsPlugin(options = {}) {
       if (Object.keys(manifest).length === 0) return;
 
       const script = `<script>window.__AC_MANIFEST__=${JSON.stringify(manifest)};</script>`;
-      await injectManifestIntoHtmlFiles(join(rootDir, 'dist'), script);
+      await injectManifestIntoHtmlFiles(resolve(rootDir, outDirRoot), script);
     }
   };
 }

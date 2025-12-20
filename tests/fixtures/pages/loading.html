@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="/dist/alpine-components.js"></script>
+    <script>
+        window.AlpineComponent.register('loading', 'loading/loading.html');
+    </script>
+</head>
+<body>
+    <div x-data>
+        <div x-component="loading" id="loading-target"></div>
+    </div>
+</body>
+</html>
+

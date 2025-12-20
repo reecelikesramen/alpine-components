@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="/dist/alpine-components.js"></script>
+    <script>
+        window.AlpineComponent.register('with-slots', 'with-slots/with-slots.html');
+    </script>
+</head>
+<body>
+    <div x-data>
+        <h2>Default Slot Implicit</h2>
+        <div x-component="with-slots" id="slot-implicit">
+            <p>Custom Content</p>
+        </div>
+
+        <h2>Named Slots</h2>
+        <div x-component="with-slots" id="slot-named">
+            <slot name="header">Custom Header</slot>
+            <slot name="footer">Custom Footer</slot>
+            <p>Custom Body</p>
+        </div>
+
+        <h2>Fallback</h2>
+        <div x-component="with-slots" id="slot-fallback"></div>
+    </div>
+</body>
+</html>
+
