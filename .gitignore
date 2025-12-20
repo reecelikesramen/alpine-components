@@ -2,3 +2,5 @@ node_modules/
 .vscode/brave-profile/
 dist/
 docs/public/search/
+.vscode/
+.cursor/
