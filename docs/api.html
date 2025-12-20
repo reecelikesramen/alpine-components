@@ -4,10 +4,11 @@
     {{> head pageTitle="API Reference"}}
 </head>
 <body>
-    <main class="container" x-data>
-        {{> nav active="api"}}
-
-        <section>
+    <div class="docs-shell" x-data>
+        {{> sidebar active="api"}}
+        <main class="docs-main">
+            <div class="container">
+                <section>
             <h1>API Reference</h1>
 
             <h2>AlpineComponent</h2>
@@ -117,6 +118,11 @@ AlpineComponent.register('header', 'header/header.html', null, { eager: true });
                             <td>Load when window receives event</td>
                             <td><code>x-component.event.openModal="modal"</code></td>
                         </tr>
+                        <tr>
+                            <td><code>.event</code></td>
+                            <td>Load on <code>alpine-components:load</code> when <code>detail.id</code> matches the component name</td>
+                            <td><code>x-component.event="modal"</code></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -160,9 +166,11 @@ Alpine.plugin(AlpineComponentPlugin);
 Alpine.start();</code></pre>
 
             <p>The plugin must be registered before calling <code>Alpine.start()</code>.</p>
-        </section>
+                </section>
 
-        {{> footer}}
-    </main>
+                {{> footer}}
+            </div>
+        </main>
+    </div>
 </body>
 </html>

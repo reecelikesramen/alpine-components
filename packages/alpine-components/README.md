@@ -44,8 +44,12 @@ Control when components load using modifiers:
 <div x-component.visible="modal"></div>
 <div x-component.visible.100px="modal"></div>  <!-- with root margin -->
 
-<!-- Event - loads on custom event -->
+<!-- Event - loads on named event -->
 <div x-component.event.openModal="modal"></div>
+
+<!-- Event - loads on alpine-component:load with matching detail.id -->
+<div x-component.event="modal"></div>
+<button @click="$dispatch('alpine-component:load', { id: 'modal' })">Load Modal</button>
 ```
 
 ## API

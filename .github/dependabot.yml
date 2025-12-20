@@ -1,0 +1,47 @@
+# See docs: https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+version: 2
+updates:
+  # Monorepo uses workspaces (pnpm). Updating from the repo root lets Dependabot
+  # follow workspace manifests and keep the lockfile consistent.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    groups:
+      prod-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      majors:
+        update-types:
+          - "major"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+

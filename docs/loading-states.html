@@ -4,10 +4,11 @@
     {{> head pageTitle="Loading States"}}
 </head>
 <body>
-    <main class="container" x-data>
-        {{> nav active="loading-states"}}
-
-        <section>
+    <div class="docs-shell" x-data>
+        {{> sidebar active="loading-states"}}
+        <main class="docs-main">
+            <div class="container">
+                <section>
             <h1>Loading States</h1>
             <p>Show a placeholder while your component loads by creating a <code>.loading.html</code> file.</p>
 
@@ -71,9 +72,11 @@
                 <li>Use CSS animations for skeleton shimmer effects</li>
                 <li>Keep loading states simple — they should load instantly</li>
             </ul>
-        </section>
+                </section>
 
-        {{> footer}}
-    </main>
+                {{> footer}}
+            </div>
+        </main>
+    </div>
 </body>
 </html>

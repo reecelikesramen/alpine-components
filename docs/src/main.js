@@ -1,6 +1,112 @@
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 import { AlpineComponent, AlpineComponentPlugin } from 'alpine-components';
+import { registerSearch } from './search/search.js';
+
+function registerTickers(Alpine) {
+  Alpine.data('commandTicker', ({ commands = [], intervalMs = 2600 } = {}) => ({
+    commands,
+    intervalMs,
+    index: 0,
+    _timer: null,
+
+    init() {
+      if (!Array.isArray(this.commands)) return;
+      if (this.commands.length <= 1) return;
+
+      const reduceMotion =
+        typeof window !== 'undefined' &&
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) return;
+
+      this._timer = window.setInterval(() => this.next(), this.intervalMs);
+      this.$cleanup?.(() => {
+        if (!this._timer) return;
+        window.clearInterval(this._timer);
+        this._timer = null;
+      });
+    },
+
+    next() {
+      if (!Array.isArray(this.commands)) return;
+      if (!this.commands.length) return;
+      this.index = (this.index + 1) % this.commands.length;
+    }
+  }));
+}
+
+function createThemeStore() {
+  const storageKey = 'ac-docs-theme';
+
+  const readMode = () => {
+    try {
+      const mode = localStorage.getItem(storageKey);
+      if (mode === 'light' || mode === 'dark' || mode === 'auto') return mode;
+      return 'auto';
+    } catch (e) {
+      return 'auto';
+    }
+  };
+
+  const writeMode = (mode) => {
+    try {
+      localStorage.setItem(storageKey, mode);
+    } catch (e) {
+      // noop
+    }
+  };
+
+  const resolveTheme = (mode) => {
+    if (mode === 'light' || mode === 'dark') return mode;
+    const prefersDark =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return prefersDark ? 'dark' : 'light';
+  };
+
+  const applyTheme = (theme) => {
+    document.documentElement.dataset.theme = theme;
+  };
+
+  return {
+    mode: 'auto',
+    _mql: null,
+
+    init() {
+      this.mode = readMode();
+
+      if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+        this._mql = window.matchMedia('(prefers-color-scheme: dark)');
+        this._mql.addEventListener?.('change', () => {
+          if (this.mode !== 'auto') return;
+          applyTheme(resolveTheme(this.mode));
+        });
+      }
+
+      applyTheme(resolveTheme(this.mode));
+    },
+
+    setMode(mode) {
+      if (mode !== 'auto' && mode !== 'light' && mode !== 'dark') return;
+
+      this.mode = mode;
+      writeMode(mode);
+      applyTheme(resolveTheme(this.mode));
+    },
+
+    cycle() {
+      if (this.mode === 'auto') return this.setMode('light');
+      if (this.mode === 'light') return this.setMode('dark');
+      return this.setMode('auto');
+    },
+
+    get resolved() {
+      return resolveTheme(this.mode);
+    }
+  };
+}
 
 // Set base path for components (uses Vite's base config)
 AlpineComponent.setBase(`${import.meta.env.BASE_URL}components`);
@@ -14,5 +120,11 @@ AlpineComponent.register('demo', 'demo/demo.html', 'demo/demo.js');
 // Use plugins
 Alpine.plugin(collapse);
 Alpine.plugin(AlpineComponentPlugin);
+
+// Stores
+Alpine.store('theme', createThemeStore());
+Alpine.store('theme').init();
+registerSearch(Alpine);
+registerTickers(Alpine);
 
 Alpine.start();

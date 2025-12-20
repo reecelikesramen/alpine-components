@@ -4,10 +4,11 @@
     {{> head pageTitle="Loading Strategies"}}
 </head>
 <body>
-    <main class="container" x-data>
-        {{> nav active="loading-strategies"}}
-
-        <section>
+    <div class="docs-shell" x-data>
+        {{> sidebar active="loading-strategies"}}
+        <main class="docs-main">
+            <div class="container">
+                <section>
             <h1>Loading Strategies</h1>
             <p>Control when your components load using modifiers. This is key to optimizing performance—only load what you need, when you need it.</p>
 
@@ -37,6 +38,12 @@
 &lt;/button&gt;
 
 &lt;div x-component.event.openModal="modal"&gt;&lt;/div&gt;</code></pre>
+                    <p><strong>Default event</strong>: If you omit the explicit event name, <code>.event</code> waits for <code>alpine-components:load</code> and matches on <code>detail.id</code>.</p>
+                    <pre><code>&lt;button @click="$dispatch('alpine-components:load', { id: 'modal' })"&gt;
+    Load Modal
+&lt;/button&gt;
+
+&lt;div x-component.event="modal"&gt;&lt;/div&gt;</code></pre>
                 </article>
             </div>
 
@@ -75,6 +82,14 @@
 &lt;!-- Component loads only when event fires --&gt;
 &lt;div x-component.event.showSettings="settings-panel"&gt;&lt;/div&gt;</code></pre>
 
+            <h3>Default Event</h3>
+            <p>If you use <code>x-component.event="name"</code> without specifying a custom event name, the component waits for <code>alpine-components:load</code> and only loads when <code>detail.id</code> matches the component name.</p>
+            <pre><code>&lt;button @click="$dispatch('alpine-components:load', { id: 'settings-panel' })"&gt;
+    Load Settings Panel
+&lt;/button&gt;
+
+&lt;div x-component.event="settings-panel"&gt;&lt;/div&gt;</code></pre>
+
             <h3>Demo</h3>
             <div class="image-placeholder">
                 [IMAGE: event-strategy.gif] — Recording showing button click triggering component load
@@ -109,9 +124,11 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+                </section>
 
-        {{> footer}}
-    </main>
+                {{> footer}}
+            </div>
+        </main>
+    </div>
 </body>
 </html>

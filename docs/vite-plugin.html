@@ -4,10 +4,11 @@
     {{> head pageTitle="Vite Plugin"}}
 </head>
 <body>
-    <main class="container" x-data>
-        {{> nav active="vite-plugin"}}
-
-        <section>
+    <div class="docs-shell" x-data>
+        {{> sidebar active="vite-plugin"}}
+        <main class="docs-main">
+            <div class="container">
+                <section>
             <h1>Vite Plugin</h1>
             <p>The Vite plugin handles serving components in development and optimizing them for production.</p>
 
@@ -104,9 +105,11 @@ export default defineConfig({
 
 // main.js
 AlpineComponent.setBase(`${import.meta.env.BASE_URL}components`);</code></pre>
-        </section>
+                </section>
 
-        {{> footer}}
-    </main>
+                {{> footer}}
+            </div>
+        </main>
+    </div>
 </body>
 </html>

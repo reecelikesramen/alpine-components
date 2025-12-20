@@ -14,9 +14,25 @@ const strategies = {
         observer.observe(el);
     }),
 
-    event: (el, eventName) => new Promise(resolve => {
-        if (!eventName) return resolve();
-        window.addEventListener(eventName, () => resolve(), { once: true });
+    event: (el, eventName, componentName) => new Promise(resolve => {
+        // Named event: wait for a one-shot window event (e.g. `openModal`)
+        if (eventName) {
+            window.addEventListener(eventName, () => resolve(), { once: true });
+            return;
+        }
+
+        // Default event: wait for a shared load event and match on detail.id
+        // Example: window.dispatchEvent(new CustomEvent('alpine-components:load', { detail: { id: 'modal' }}))
+        const defaultEvent = 'alpine-components:load';
+
+        const handler = (e) => {
+            const id = e?.detail?.id;
+            if (id !== componentName) return;
+            window.removeEventListener(defaultEvent, handler);
+            resolve();
+        };
+
+        window.addEventListener(defaultEvent, handler);
     })
 };
 
@@ -131,7 +147,7 @@ export function AlpineComponentPlugin(Alpine) {
         const strategyArg = modifiers.find(m => !['visible', 'event', 'eager'].includes(m));
 
         // Await strategy condition
-        await strategies[strategyName](el, strategyArg);
+        await strategies[strategyName](el, strategyArg, name);
         if (!el.isConnected) return;
 
         // Collect slot content from <slot name="..."> elements

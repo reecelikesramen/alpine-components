@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/build-search-index.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/build-search-index.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -11,7 +13,8 @@
     "@alpinejs/collapse": "^3.15.3",
     "alpine-components": "workspace:*",
     "alpinejs": "^3.15.3",
-    "async-alpine": "^2.0.3"
+    "async-alpine": "^2.0.3",
+    "fuse.js": "^7.0.0"
   },
   "devDependencies": {
     "vite": "^6.0.0",

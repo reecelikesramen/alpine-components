@@ -4,10 +4,11 @@
     {{> head pageTitle="Slots"}}
 </head>
 <body>
-    <main class="container" x-data>
-        {{> nav active="slots"}}
-
-        <section>
+    <div class="docs-shell" x-data>
+        {{> sidebar active="slots"}}
+        <main class="docs-main">
+            <div class="container">
+                <section>
             <h1>Slots</h1>
             <p>Customize component content using slots—similar to Vue or Web Components. Define slots in your template and fill them when using the component.</p>
 
@@ -101,9 +102,11 @@
                 <li><strong>Document your slots</strong> — List available slots in your component's README</li>
                 <li><strong>Keep slots focused</strong> — Each slot should have a single purpose</li>
             </ul>
-        </section>
+                </section>
 
-        {{> footer}}
-    </main>
+                {{> footer}}
+            </div>
+        </main>
+    </div>
 </body>
 </html>

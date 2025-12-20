@@ -4,7 +4,7 @@ import handlebars from 'vite-plugin-handlebars';
 import { componentAssetsPlugin } from 'vite-plugin-alpine-components';
 
 export default defineConfig({
-  base: '/alpine-components/',
+  base: '/',
   plugins: [
     handlebars({
       partialDirectory: resolve(__dirname, 'src/partials'),

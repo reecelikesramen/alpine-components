@@ -5,3 +5,56 @@
         <a href="https://www.npmjs.com/package/alpine-components">npm</a>
     </p>
 </footer>
+
+<div
+    class="docs-search-overlay"
+    x-cloak
+    x-show="$store.search?.isOpen"
+    @click.self="$store.search?.close?.()"
+    @keydown.escape.window="$store.search?.close?.()"
+>
+    <div class="docs-search-panel" role="dialog" aria-modal="true" aria-label="Search documentation">
+        <input
+            id="docs-search-input"
+            type="search"
+            placeholder="Search docs…"
+            autocomplete="off"
+            x-model="$store.search.query"
+            @input="$store.search.search()"
+            @keydown.arrow-down.prevent="$store.search.move(1)"
+            @keydown.arrow-up.prevent="$store.search.move(-1)"
+            @keydown.enter.prevent="$store.search.goActive()"
+        />
+
+        <div class="docs-search-hint">
+            <span>Navigate</span>
+            <span class="docs-kbd">↑↓</span>
+            <span>Open</span>
+            <span class="docs-kbd">Enter</span>
+            <span>Close</span>
+            <span class="docs-kbd">Esc</span>
+        </div>
+
+        <ul class="docs-search-results" role="listbox">
+            <template x-for="(hit, idx) in $store.search.results" :key="hit.url">
+                <li>
+                    <a
+                        class="docs-search-result"
+                        :class="idx === $store.search.activeIndex ? 'active' : ''"
+                        :href="hit.url"
+                        @click.prevent="window.location.href = hit.url; $store.search.close()"
+                    >
+                        <div class="docs-search-result__title" x-text="hit.title"></div>
+                        <div class="docs-search-result__meta">
+                            <span x-text="hit.pageTitle"></span>
+                        </div>
+                    </a>
+                </li>
+            </template>
+            <li x-show="$store.search.query && !$store.search.results.length" class="docs-search-empty">
+                No results.
+            </li>
+        </ul>
+    </div>
+</div>
+

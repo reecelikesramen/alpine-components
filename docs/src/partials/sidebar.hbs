@@ -1,0 +1,25 @@
+<aside class="docs-sidebar" aria-label="Documentation">
+    <div class="docs-sidebar__top">
+        <a class="docs-brand" href="./">Alpine Components</a>
+
+        <div class="docs-sidebar__actions">
+            <button class="outline docs-action" type="button" @click="$store.search?.open?.()">
+                Search <span class="docs-kbd">⌘K</span>
+            </button>
+            <button class="outline docs-action" type="button" @click="$store.theme?.cycle?.()">
+                Theme <span class="docs-kbd" x-text="$store.theme?.mode ?? 'auto'"></span>
+            </button>
+        </div>
+    </div>
+
+    <nav class="docs-sidebar__nav">
+        <a href="guide"{{#if (eq active "guide")}} aria-current="page"{{/if}}>Guide</a>
+        <a href="loading-strategies"{{#if (eq active "loading-strategies")}} aria-current="page"{{/if}}>Loading Strategies</a>
+        <a href="slots"{{#if (eq active "slots")}} aria-current="page"{{/if}}>Slots</a>
+        <a href="loading-states"{{#if (eq active "loading-states")}} aria-current="page"{{/if}}>Loading States</a>
+        <a href="vite-plugin"{{#if (eq active "vite-plugin")}} aria-current="page"{{/if}}>Vite Plugin</a>
+        <a href="api"{{#if (eq active "api")}} aria-current="page"{{/if}}>API</a>
+    </nav>
+</aside>
+
+

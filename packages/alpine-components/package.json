@@ -3,13 +3,22 @@
   "version": "0.1.2",
   "description": "Lazy-loaded components with slots for Alpine.js",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/alpine-components.cjs.js",
+  "module": "dist/alpine-components.esm.js",
+  "unpkg": "dist/alpine-components.min.js",
+  "jsdelivr": "dist/alpine-components.min.js",
   "exports": {
-    ".": "./index.js"
+    ".": {
+      "import": "./dist/alpine-components.esm.js",
+      "require": "./dist/alpine-components.cjs.js"
+    }
   },
   "files": [
-    "index.js"
+    "dist"
   ],
+  "scripts": {
+    "build": "rollup -c"
+  },
   "keywords": [
     "alpine",
     "alpinejs",
@@ -21,10 +30,13 @@
   "peerDependencies": {
     "alpinejs": "^3.0.0"
   },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.28.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/reecelikesramen/alpine-components.git",
     "directory": "packages/alpine-components"
   }
 }
-
