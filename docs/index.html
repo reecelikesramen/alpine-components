@@ -9,7 +9,7 @@
         <header class="hero">
             <h1>Alpine Components</h1>
             <p class="tagline">Lazy-loaded components with slots for Alpine.js</p>
-            <div x-component="installTicker"></div>
+            <div x-component="installTicker" x-data="installTicker()"></div>
         </header>
 
         {{> nav}}
@@ -50,24 +50,20 @@ AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
 &lt;/div&gt;</code></pre>
 
             <h3>Live Demo</h3>
-            <div class="demo-container">
+            <div class="demo-container" style="margin-bottom: 2rem;">
                 <div class="demo-preview">
                     <div x-component="modal"></div>
                 </div>
             </div>
 
-            <p><a href="guide">Get started with the full guide →</a></p>
+            <p style="margin-top: 2rem;"><a href="guide">Get started with the full guide →</a></p>
         </section>
 
         <!-- Installation -->
         <section>
             <h2>Installation</h2>
 
-            <pre><code class="language-bash">npm install alpine-components alpinejs</code></pre>
-
-            <p>For the Vite plugin (recommended):</p>
-
-            <pre><code class="language-bash">npm install -D vite-plugin-alpine-components</code></pre>
+            <div x-component="installTicker" x-data="installTicker()" style="margin-bottom: 2rem;"></div>
 
             <p><a href="vite-plugin">Configure the Vite plugin →</a></p>
         </section>

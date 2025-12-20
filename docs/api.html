@@ -11,7 +11,7 @@
                 <section>
             <h1>API Reference</h1>
 
-            <h2>AlpineComponent</h2>
+            <h2 style="margin-top: 4rem;">AlpineComponent</h2>
             <p>The core object for managing component registration and loading.</p>
 
             <h3><code>AlpineComponent.setBase(basePath)</code></h3>
@@ -81,7 +81,7 @@ AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
 // Eagerly prefetch
 AlpineComponent.register('header', 'header/header.html', null, { eager: true });</code></pre>
 
-            <h2>x-component Directive</h2>
+            <h2 style="margin-top: 4rem;">x-component Directive</h2>
             <p>The Alpine directive for rendering components.</p>
 
             <h3>Basic Usage</h3>
@@ -127,7 +127,7 @@ AlpineComponent.register('header', 'header/header.html', null, { eager: true });
                 </table>
             </div>
 
-            <h2>Component JS Module</h2>
+            <h2 style="margin-top: 4rem;">Component JS Module</h2>
             <p>Component JS files should export a default function that returns an Alpine data object:</p>
             <pre><code class="language-javascript">// modal.js
 export default function modal(options = {}) {
@@ -156,7 +156,7 @@ export default function modal(options = {}) {
     };
 }</code></pre>
 
-            <h2>AlpineComponentPlugin</h2>
+            <h2 style="margin-top: 4rem;">AlpineComponentPlugin</h2>
             <p>The Alpine.js plugin that provides the <code>x-component</code> directive.</p>
 
             <pre><code class="language-javascript">import Alpine from 'alpinejs';

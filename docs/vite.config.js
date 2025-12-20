@@ -31,7 +31,9 @@ export default defineConfig({
         slots: resolve(__dirname, 'slots.html'),
         'loading-states': resolve(__dirname, 'loading-states.html'),
         'vite-plugin': resolve(__dirname, 'vite-plugin.html'),
-        api: resolve(__dirname, 'api.html')
+        api: resolve(__dirname, 'api.html'),
+        credits: resolve(__dirname, 'credits.html'),
+        license: resolve(__dirname, 'license.html')
       }
     }
   }
