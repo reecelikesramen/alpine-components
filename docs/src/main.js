@@ -1,5 +1,4 @@
 import Alpine from 'alpinejs';
-import persist from '@alpinejs/persist';
 import collapse from '@alpinejs/collapse';
 import { AlpineComponent, AlpineComponentPlugin } from 'alpine-components';
 import { registerSearch } from './search/search.js';
@@ -91,7 +90,6 @@ AlpineComponent.register('strategy-card', 'strategy-card/strategy-card.html');
 
 // Use plugins
 Alpine.plugin(collapse);
-Alpine.plugin(persist);
 Alpine.plugin(AlpineComponentPlugin);
 
 // Stores
