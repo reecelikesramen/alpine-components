@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reeceholmdahl/alpine-components.git",
+    "url": "git+https://github.com/reecelikesramen/alpine-components.git",
     "directory": "packages/alpine-components"
   }
 }

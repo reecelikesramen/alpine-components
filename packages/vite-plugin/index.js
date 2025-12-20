@@ -23,6 +23,7 @@ export function componentAssetsPlugin(options = {}) {
 
   let rootDir;
   let isBuild = false;
+  let basePath = '/';
 
   // Cache for loading HTML content
   const loadingCache = new Map();
@@ -64,6 +65,7 @@ export function componentAssetsPlugin(options = {}) {
     configResolved(config) {
       rootDir = config.root;
       isBuild = config.command === 'build';
+      basePath = config.base || '/';
     },
 
     // Transform index.html: inject loading HTML and minify
@@ -76,13 +78,14 @@ export function componentAssetsPlugin(options = {}) {
       }
     },
 
-    // Dev: serve component files at /dest/... from src/...
+    // Dev: serve component files at {base}{dest}/... from src/...
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         const url = req.url?.split('?')[0];
-        if (!url?.startsWith(`/${dest}/`)) return next();
+        const prefix = `${basePath}${dest}/`.replace(/\/+/g, '/');
+        if (!url?.startsWith(prefix)) return next();
 
-        const relativePath = url.slice(dest.length + 2); // strip /dest/
+        const relativePath = url.slice(prefix.length);
         const filePath = join(rootDir, src, relativePath);
 
         try {
