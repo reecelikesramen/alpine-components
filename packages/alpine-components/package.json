@@ -1,6 +1,6 @@
 {
   "name": "alpine-components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lazy-loaded components with slots for Alpine.js",
   "type": "module",
   "main": "index.js",
