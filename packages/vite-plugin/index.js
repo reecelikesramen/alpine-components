@@ -121,20 +121,38 @@ export function componentAssetsPlugin(options = {}) {
 
       await processDirectory(srcDir, outDir, srcDir, manifest);
 
-      // Inject manifest into built HTML
+      // Inject manifest into all built HTML files
       if (Object.keys(manifest).length === 0) return;
 
-      const htmlPath = join(rootDir, 'dist', 'index.html');
-      try {
-        let html = await readFile(htmlPath, 'utf-8');
-        const script = `<script>window.__AC_MANIFEST__=${JSON.stringify(manifest)};</script>`;
-        html = html.replace('<head>', `<head>${script}`);
-        await writeFile(htmlPath, html);
-      } catch {
-        // index.html may not exist in all builds
-      }
+      const script = `<script>window.__AC_MANIFEST__=${JSON.stringify(manifest)};</script>`;
+      await injectManifestIntoHtmlFiles(join(rootDir, 'dist'), script);
     }
   };
+}
+
+async function injectManifestIntoHtmlFiles(dir, script) {
+  const entries = await readdir(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      await injectManifestIntoHtmlFiles(fullPath, script);
+      continue;
+    }
+
+    if (!entry.name.endsWith('.html')) continue;
+
+    try {
+      let html = await readFile(fullPath, 'utf-8');
+      if (html.includes('<head>')) {
+        html = html.replace('<head>', `<head>${script}`);
+        await writeFile(fullPath, html);
+      }
+    } catch {
+      // Skip files that can't be read/written
+    }
+  }
 }
 
 async function processDirectory(dir, outDir, baseDir, manifest) {
