@@ -31,6 +31,10 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Build alpine-components
+        working-directory: packages/alpine-components
+        run: pnpm run build
+
       - name: Build docs
         working-directory: docs
         run: pnpm run build
