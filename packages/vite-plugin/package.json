@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-alpine-components",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Vite plugin for alpine-components: serves, minifies, and injects loading states",
   "type": "module",
   "main": "index.js",
@@ -8,7 +8,8 @@
     ".": "./index.js"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "README.md"
   ],
   "keywords": [
     "vite",
@@ -32,4 +33,3 @@
     "directory": "packages/vite-plugin"
   }
 }
-

@@ -23,12 +23,12 @@ export default [
         input: 'src/index.js',
         output: [
             {
-                file: 'dist/alpine-components.esm.js',
+                file: 'dist/module.esm.js',
                 format: 'es',
                 banner
             },
             {
-                file: 'dist/alpine-components.esm.min.js',
+                file: 'dist/module.esm.min.js',
                 format: 'es',
                 banner,
                 plugins: [terser(terserOptions)]
@@ -40,13 +40,13 @@ export default [
         input: 'src/index.js',
         output: [
             {
-                file: 'dist/alpine-components.cjs.js',
+                file: 'dist/module.cjs.js',
                 format: 'cjs',
                 banner,
                 exports: 'named'
             },
             {
-                file: 'dist/alpine-components.cjs.min.js',
+                file: 'dist/module.cjs.min.js',
                 format: 'cjs',
                 banner,
                 exports: 'named',
@@ -59,13 +59,13 @@ export default [
         input: 'src/iife.js',
         output: [
             {
-                file: 'dist/alpine-components.js',
+                file: 'dist/cdn.js',
                 format: 'iife',
                 name: 'AlpineComponents',
                 banner
             },
             {
-                file: 'dist/alpine-components.min.js',
+                file: 'dist/cdn.min.js',
                 format: 'iife',
                 name: 'AlpineComponents',
                 banner,
@@ -74,4 +74,3 @@ export default [
         ]
     }
 ];
-

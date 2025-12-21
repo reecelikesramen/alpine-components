@@ -1,0 +1,8 @@
+# Override root .gitignore to include dist
+!dist/
+
+# Exclude dev files
+src/
+rollup.config.js
+node_modules/
+

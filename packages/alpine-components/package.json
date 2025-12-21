@@ -1,20 +1,21 @@
 {
   "name": "alpine-components",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Lazy-loaded components with slots for Alpine.js",
   "type": "module",
-  "main": "dist/alpine-components.cjs.js",
-  "module": "dist/alpine-components.esm.js",
-  "unpkg": "dist/alpine-components.min.js",
-  "jsdelivr": "dist/alpine-components.min.js",
+  "main": "dist/module.cjs.js",
+  "module": "dist/module.esm.js",
+  "unpkg": "dist/cdn.min.js",
+  "jsdelivr": "dist/cdn.min.js",
   "exports": {
     ".": {
-      "import": "./dist/alpine-components.esm.js",
-      "require": "./dist/alpine-components.cjs.js"
+      "import": "./dist/module.esm.js",
+      "require": "./dist/module.cjs.js"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "build": "rollup -c"
