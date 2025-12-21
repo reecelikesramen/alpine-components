@@ -11,6 +11,13 @@ export default defineConfig({
     baseURL: 'http://localhost:5188',
     trace: 'on-first-retry',
   },
+  webServer: {
+    command: 'pnpm exec vite --config tests/vite.config.js --port 5173',
+    url: 'http://localhost:5173',
+    reuseExistingServer: !process.env.CI,
+    stdout: 'pipe',
+    stderr: 'pipe',
+  },
   projects: [
     {
       name: 'chromium',
