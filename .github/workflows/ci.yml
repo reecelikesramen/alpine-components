@@ -37,7 +37,7 @@ jobs:
         run: pnpm run test:build
 
       - name: Build Library
-        run: pnpm run build --prefix packages/alpine-components
+        run: pnpm --filter alpine-components run build
 
       - name: Run Browser Tests
         run: pnpm run test:browser --project chromium
