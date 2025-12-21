@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="/dist/alpine-components.js"></script>
+    <script>
+        window.AlpineComponent.register('simple', 'simple/simple.html');
+        window.AlpineComponent.register('withJs', 'withJs/withJs.html', 'withJs/withJs.js');
+    </script>
+</head>
+<body>
+    <div x-data>
+        <h2>Eager</h2>
+        <div x-component.eager="simple" id="eager-target"></div>
+
+        <h2>Visible</h2>
+        <div style="height: 1000px;">Scroll down</div>
+        <div x-component.visible="simple" id="visible-target"></div>
+
+        <h2>Event</h2>
+        <button id="trigger-event" @click="$dispatch('load-event')">Load Event</button>
+        <div x-component.event.load-event="simple" id="event-target"></div>
+
+        <h2>Default Event</h2>
+        <button id="trigger-default" @click="$dispatch('alpine-components:load', { detail: { id: 'simple' }})">Load Default Event</button>
+        <div x-component.event="simple" id="default-event-target"></div>
+    </div>
+</body>
+</html>
+

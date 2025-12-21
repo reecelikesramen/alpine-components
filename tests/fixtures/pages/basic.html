@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="/dist/alpine-components.js"></script>
+    <script>
+        window.AlpineComponent.register('simple', 'simple/simple.html');
+        window.AlpineComponent.register('withJs', 'withJs/withJs.html', 'withJs/withJs.js');
+        window.AlpineComponent.register('loading', 'loading/loading.html');
+    </script>
+</head>
+<body>
+    <div x-data>
+        <div x-component="simple" id="simple-target"></div>
+    </div>
+</body>
+</html>
+

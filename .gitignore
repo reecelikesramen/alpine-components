@@ -1,6 +1,11 @@
 node_modules/
-.vscode/brave-profile/
 dist/
 docs/public/search/
 .vscode/
 .cursor/
+
+# Testing artifacts
+playwright-report/
+test-results/
+tests/fixtures/dist/
+tests/fixtures/dist-test/
