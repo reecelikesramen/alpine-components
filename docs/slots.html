@@ -55,15 +55,15 @@
             <p>See the difference between default and customized components:</p>
 
             <div class="slot-comparison">
-                <div>
+                <div class="slot-example">
                     <h4>Default Modal</h4>
                     <div x-component="modal"></div>
                 </div>
-                <div>
+                <div class="slot-example">
                     <h4>Customized Modal</h4>
                     <div x-component="modal">
                         <slot name="trigger">
-                            <button class="outline">Custom Trigger</button>
+                            <button class="outline" x-bind="trigger">Custom Trigger</button>
                         </slot>
                         <slot name="header">
                             <p><strong>Custom Header!</strong></p>

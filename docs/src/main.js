@@ -35,6 +35,14 @@ function createThemeStore() {
 
   const applyTheme = (theme) => {
     document.documentElement.dataset.theme = theme;
+    
+    // Toggle highlight.js themes
+    const themeLink = document.getElementById('hljs-theme');
+    if (themeLink) {
+      const darkHref = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/gruvbox-dark-medium.min.css';
+      const lightHref = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/gruvbox-light-medium.min.css';
+      themeLink.href = theme === 'dark' ? darkHref : lightHref;
+    }
   };
 
   return {
@@ -81,7 +89,7 @@ AlpineComponent.setBase(`${import.meta.env.BASE_URL}components`);
 // Register components
 AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
 AlpineComponent.register('tabs', 'tabs/tabs.html', 'tabs/tabs.js');
-AlpineComponent.register('code-block', 'code-block/code-block.html', 'code-block/code-block.js');
+AlpineComponent.register('codeBlock', 'code-block/code-block.html', 'code-block/code-block.js');
 AlpineComponent.register('demo', 'demo/demo.html', 'demo/demo.js');
 AlpineComponent.register('installTicker', 'install-ticker/install-ticker.html', 'install-ticker/install-ticker.js');
 AlpineComponent.register('search-modal', 'search-modal/search-modal.html');
@@ -97,7 +105,32 @@ Alpine.store('theme', createThemeStore());
 Alpine.store('theme').init();
 registerSearch(Alpine);
 
-// Init highlight.js
-if (window.hljs) window.hljs.highlightAll();
+// --- Highlight.js Logic ---
+const initHighlighting = () => {
+  if (!window.hljs) return;
 
+  // Initial highlight
+  window.hljs.highlightAll();
+
+  // Watch for dynamic content (lazy-loaded components)
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1) { // Element
+          const codeBlocks = node.querySelectorAll('pre code:not([data-highlighted="yes"])');
+          codeBlocks.forEach((block) => {
+            window.hljs.highlightElement(block);
+          });
+        }
+      });
+    });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+};
+
+// Start Alpine
 Alpine.start();
+
+// Initialize highlighting after Alpine starts to ensure components are being watched
+initHighlighting();

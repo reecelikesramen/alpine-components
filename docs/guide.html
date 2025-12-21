@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-    {{> head pageTitle="Quick Start Guide"}}
+    {{> head pageTitle="Getting Started"}}
 </head>
 <body>
     <div class="docs-shell" x-data>
@@ -9,16 +9,34 @@
         <main class="docs-main">
             <div class="container">
                 <section>
-            <h1>Quick Start Guide</h1>
+            <h1>Getting Started</h1>
             <p>Get up and running with Alpine Components in minutes.</p>
 
             <h2>1. Install</h2>
-            <pre><code class="language-bash">npm install alpine-components alpinejs</code></pre>
+            <div x-component="installTicker" x-data="installTicker()"></div>
 
             <h2>2. Choose an integration style</h2>
-            <p>Alpine Components ships as ESM/CJS for bundlers and an IIFE build for script tags.</p>
+            <p>Alpine Components can be used via a simple script tag or integrated into your build process.</p>
+
+            <h3>Script tag (CDN) style</h3>
+            <p>The easiest way to start. Include the Alpine Components script <strong>before</strong> Alpine's core script. It auto-registers the plugin during <code>alpine:init</code>.</p>
+
+            <pre><code class="language-html">&lt;!-- index.html --&gt;
+&lt;script defer src="https://cdn.jsdelivr.net/npm/alpine-components@0.1.2/dist/alpine-components.min.js"&gt;&lt;/script&gt;
+&lt;script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+document.addEventListener('alpine:init', () =&gt; {
+  AlpineComponent.setBase('/components');
+  AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
+});
+&lt;/script&gt;</code></pre>
 
             <h3>Module (bundler) style</h3>
+            <p>If you're using Vite, Webpack, or another bundler:</p>
+            
+            <pre><code class="language-bash">npm install alpine-components alpinejs</code></pre>
+
             <pre><code class="language-javascript">// main.js
 import Alpine from 'alpinejs';
 import { AlpineComponent, AlpineComponentPlugin } from 'alpine-components';
@@ -29,20 +47,6 @@ AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
 // Use the plugin
 Alpine.plugin(AlpineComponentPlugin);
 Alpine.start();</code></pre>
-
-            <h3>Script tag (no bundler) style</h3>
-            <p>Use the prebuilt IIFE bundle from a CDN (or self-host it). It exposes <code>window.AlpineComponent</code> and auto-registers the plugin during <code>alpine:init</code>.</p>
-
-            <pre><code class="language-html">&lt;!-- index.html --&gt;
-&lt;script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"&gt;&lt;/script&gt;
-&lt;script defer src="https://cdn.jsdelivr.net/npm/alpine-components@0.1.2/dist/alpine-components.min.js"&gt;&lt;/script&gt;
-
-&lt;script&gt;
-document.addEventListener('alpine:init', () =&gt; {
-  AlpineComponent.setBase('/components');
-  AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
-});
-&lt;/script&gt;</code></pre>
 
             <h2>3. Create a component</h2>
             <p>Components consist of an HTML template and an optional JS file for Alpine data:</p>
