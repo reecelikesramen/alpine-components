@@ -11,34 +11,45 @@
                 <section>
             <h1>API Reference</h1>
 
-            <h2 style="margin-top: 4rem;">AlpineComponent</h2>
-            <p>The core object for managing component registration and loading.</p>
+            <h2 style="margin-top: 4rem;">Plugin Initialization</h2>
+            <p>The library is an Alpine.js plugin that adds component management capabilities.</p>
 
-            <h3><code>AlpineComponent.setBase(basePath)</code></h3>
-            <p>Set the base URL path for component files.</p>
+            <h3><code>components(options?)</code></h3>
+            <p>Initialize the plugin with optional configuration.</p>
             <div class="api-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>Parameter</th>
+                            <th>Option</th>
                             <th>Type</th>
                             <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><code>basePath</code></td>
-                            <td><code>string</code></td>
-                            <td>Base URL path. Default: <code>/components</code></td>
+                            <td><code>base</code></td>
+                            <td><code>string | [string, string]</code></td>
+                            <td>Base path for components. Can be a single string or a tuple for <code>[htmlBase, jsBase]</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><code>alias</code></td>
+                            <td><code>string | [string, string]</code></td>
+                            <td>Pattern for resolving component names to paths using <code>[name]</code> and <code>[ext]</code> placeholders.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <pre><code class="language-javascript">// Example with Vite's base config
-AlpineComponent.setBase(`${import.meta.env.BASE_URL}components`);</code></pre>
+            <pre><code class="language-javascript">// Standard usage
+Alpine.plugin(components({
+  base: '/assets/components/',
+  alias: '[name]/[name].[ext]'
+}));</code></pre>
 
-            <h3><code>AlpineComponent.register(name, templatePath, jsPath?, options?)</code></h3>
-            <p>Register a component for use with <code>x-component</code>.</p>
+            <h2 style="margin-top: 4rem;">Alpine.components</h2>
+            <p>The core object for managing component registration.</p>
+
+            <h3><code>Alpine.components.register(name, templatePath, jsPath?)</code></h3>
+            <p>Register a component manually.</p>
             <div class="api-table">
                 <table>
                     <thead>
@@ -56,38 +67,63 @@ AlpineComponent.setBase(`${import.meta.env.BASE_URL}components`);</code></pre>
                         </tr>
                         <tr>
                             <td><code>templatePath</code></td>
-                            <td><code>string</code></td>
-                            <td>Path to HTML template (relative to base or absolute)</td>
+                            <td><code>string | object</code></td>
+                            <td>Path to HTML template, or an options object.</td>
                         </tr>
                         <tr>
                             <td><code>jsPath</code></td>
                             <td><code>string?</code></td>
-                            <td>Optional path to JS module exporting Alpine data function</td>
-                        </tr>
-                        <tr>
-                            <td><code>options.eager</code></td>
-                            <td><code>boolean?</code></td>
-                            <td>If true, prefetch component immediately on registration</td>
+                            <td>Optional path to JS module exporting Alpine data function.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <pre><code class="language-javascript">// Template only
-AlpineComponent.register('alert', 'alert/alert.html');
+            <pre><code class="language-javascript">// Simple registration
+Alpine.components.register('modal', 'modal.html', 'modal.js');
 
-// Template + JS data
-AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
-
-// Eagerly prefetch
-AlpineComponent.register('header', 'header/header.html', null, { eager: true });</code></pre>
+// Object syntax with eager loading
+Alpine.components.register('header', {
+  template: 'header.html',
+  js: 'header.js',
+  eager: true
+});</code></pre>
 
             <h2 style="margin-top: 4rem;">x-component Directive</h2>
             <p>The Alpine directive for rendering components.</p>
 
-            <h3>Basic Usage</h3>
-            <pre><code class="language-html">&lt;div x-component="componentName"&gt;&lt;/div&gt;</code></pre>
+            <h3>Usage Varieties</h3>
+            <div class="api-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Syntax</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>x-component="name"</code></td>
+                            <td>Resolves via registry or alias pattern.</td>
+                        </tr>
+                        <tr>
+                            <td><code>x-component="path.html"</code></td>
+                            <td>Loads HTML directly from path (no JS).</td>
+                        </tr>
+                        <tr>
+                            <td><code>x-component="['h.html', 'j.js']"</code></td>
+                            <td>Loads both HTML and JS from explicit paths.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <h3>Modifiers</h3>
+            <h3>Element Types</h3>
+            <p>While <code>x-component</code> works on any element, using it on a <code>&lt;template&gt;</code> tag is preferred as it avoids "layout shift" by replacing itself with the component content.</p>
+            <pre><code class="language-html">&lt;template x-component="modal" title="Welcome"&gt;
+    &lt;p&gt;Body content&lt;/p&gt;
+&lt;/template&gt;</code></pre>
+
+            <h3>Modifiers (Strategies)</h3>
             <div class="api-table">
                 <table>
                     <thead>
@@ -100,77 +136,37 @@ AlpineComponent.register('header', 'header/header.html', null, { eager: true });
                     <tbody>
                         <tr>
                             <td><code>.eager</code></td>
-                            <td>Load immediately (default behavior)</td>
+                            <td>Load immediately (default).</td>
                             <td><code>x-component.eager="modal"</code></td>
                         </tr>
                         <tr>
                             <td><code>.visible</code></td>
-                            <td>Load when element enters viewport</td>
+                            <td>Load when element enters viewport.</td>
                             <td><code>x-component.visible="modal"</code></td>
                         </tr>
                         <tr>
-                            <td><code>.visible.{margin}</code></td>
-                            <td>Load with IntersectionObserver rootMargin</td>
-                            <td><code>x-component.visible.100px="modal"</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>.event.{eventName}</code></td>
-                            <td>Load when window receives event</td>
-                            <td><code>x-component.event.openModal="modal"</code></td>
-                        </tr>
-                        <tr>
                             <td><code>.event</code></td>
-                            <td>Load on <code>alpine-components:load</code> when <code>detail.id</code> matches the component name</td>
-                            <td><code>x-component.event="modal"</code></td>
+                            <td>Load on custom event or <code>alpine-components:load</code>.</td>
+                            <td><code>x-component.event.my-event="modal"</code></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <h2 style="margin-top: 4rem;">Component JS Module</h2>
-            <p>Component JS files should export a default function that returns an Alpine data object:</p>
-            <pre><code class="language-javascript">// modal.js
-export default function modal(options = {}) {
-    return {
-        // Reactive state
-        isOpen: false,
+            <h2 style="margin-top: 4rem;">$params Magic</h2>
+            <p>Access attributes passed to the component from the caller.</p>
+            <pre><code class="language-html">&lt;!-- Caller --&gt;
+&lt;template x-component="user-profile" user-id="123" :active="true"&gt;&lt;/template&gt;
 
-        // Computed properties as getters returning x-bind objects
-        get trigger() {
-            return {
-                '@click'() { this.isOpen = true }
-            };
-        },
-
-        // Methods
-        open() { this.isOpen = true },
-        close() { this.isOpen = false },
-
-        // Lifecycle
-        init() {
-            console.log('Component initialized');
-        },
-        destroy() {
-            console.log('Component destroyed');
-        }
-    };
-}</code></pre>
-
-            <h2 style="margin-top: 4rem;">AlpineComponentPlugin</h2>
-            <p>The Alpine.js plugin that provides the <code>x-component</code> directive.</p>
-
-            <pre><code class="language-javascript">import Alpine from 'alpinejs';
-import { AlpineComponentPlugin } from 'alpine-components';
-
-Alpine.plugin(AlpineComponentPlugin);
-Alpine.start();</code></pre>
-
-            <p>The plugin must be registered before calling <code>Alpine.start()</code>.</p>
+&lt;!-- Component (user-profile.html) --&gt;
+&lt;div x-data="profile($params.userId)"&gt;
+    &lt;p x-show="$params.active"&gt;User ID: &lt;span x-text="$params.userId"&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+            <p>Note: Attributes are automatically converted from kebab-case to camelCase when accessed via <code>$params</code>.</p>
                 </section>
-
-                {{> footer}}
             </div>
         </main>
     </div>
+    {{> footer}}
 </body>
 </html>

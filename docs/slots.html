@@ -21,9 +21,9 @@
 &lt;/div&gt;
 
 &lt;!-- When using --&gt;
-&lt;div x-component="card"&gt;
+&lt;template x-component="card"&gt;
     &lt;p&gt;This replaces the default slot content.&lt;/p&gt;
-&lt;/div&gt;</code></pre>
+&lt;/template&gt;</code></pre>
 
             <p>Only one default slot is allowed per template. A component can have both a default slot and named slots.</p>
 
@@ -42,14 +42,14 @@
 &lt;/article&gt;</code></pre>
 
             <h3>Filling Named Slots</h3>
-            <pre><code class="language-html">&lt;div x-component="modal"&gt;
+            <pre><code class="language-html">&lt;template x-component="modal"&gt;
     &lt;slot name="header"&gt;
         &lt;h3&gt;Custom Title&lt;/h3&gt;
     &lt;/slot&gt;
     &lt;slot name="body"&gt;
         &lt;p&gt;Custom body content with &lt;strong&gt;HTML&lt;/strong&gt;.&lt;/p&gt;
     &lt;/slot&gt;
-&lt;/div&gt;</code></pre>
+&lt;/template&gt;</code></pre>
 
             <h2>Slot Comparison</h2>
             <p>See the difference between default and customized components:</p>
@@ -57,11 +57,11 @@
             <div class="slot-comparison">
                 <div class="slot-example">
                     <h4>Default Modal</h4>
-                    <div x-component="modal"></div>
+                    <template x-component="modal"></template>
                 </div>
                 <div class="slot-example">
                     <h4>Customized Modal</h4>
-                    <div x-component="modal">
+                    <template x-component="modal">
                         <slot name="trigger">
                             <button class="outline" x-bind="trigger">Custom Trigger</button>
                         </slot>
@@ -75,7 +75,7 @@
                             <button class="secondary" x-bind="closeButton">Cancel</button>
                             <button x-bind="closeButton">Save Changes</button>
                         </slot>
-                    </div>
+                    </template>
                 </div>
             </div>
 
@@ -88,14 +88,14 @@
 &lt;/slot&gt;
 
 &lt;!-- Usage without slot content - shows default icon --&gt;
-&lt;div x-component="button"&gt;&lt;/div&gt;
+&lt;template x-component="button"&gt;&lt;/template&gt;
 
 &lt;!-- Usage with slot content - shows custom icon --&gt;
-&lt;div x-component="button"&gt;
+&lt;template x-component="button"&gt;
     &lt;slot name="icon"&gt;
         &lt;img src="custom-icon.svg"&gt;
     &lt;/slot&gt;
-&lt;/div&gt;</code></pre>
+&lt;/template&gt;</code></pre>
 
             <h2>Validation</h2>
             <p>Alpine Components validates slot usage and logs console warnings for:</p>

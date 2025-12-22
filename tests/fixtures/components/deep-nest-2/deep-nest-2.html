@@ -1,0 +1,7 @@
+<template>
+    <div class="deep-nest-2">
+        <p x-text="'L2: ' + $params.val"></p>
+        <div x-component="deep_nest_3" :val="$params.val + '->L3'"></div>
+    </div>
+</template>
+

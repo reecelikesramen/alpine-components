@@ -1,5 +1,5 @@
 <template>
-<div x-data="tabs" class="tabs">
+<div x-data="tabs($params)" class="tabs">
     <nav>
         <template x-for="(label, index) in labels" :key="index">
             <button 
@@ -18,3 +18,4 @@
     </div>
 </div>
 </template>
+

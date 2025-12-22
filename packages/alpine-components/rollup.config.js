@@ -61,13 +61,11 @@ export default [
             {
                 file: 'dist/cdn.js',
                 format: 'iife',
-                name: 'AlpineComponents',
                 banner
             },
             {
                 file: 'dist/cdn.min.js',
                 format: 'iife',
-                name: 'AlpineComponents',
                 banner,
                 plugins: [terser(terserOptions)]
             }

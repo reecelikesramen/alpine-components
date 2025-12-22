@@ -23,7 +23,7 @@ test.describe('Basic Rendering', () => {
     });
 
     test('renders component with JS and handles interaction', async ({ page }) => {
-        await page.waitForFunction(() => typeof window.AlpineComponent !== 'undefined');
+        await page.waitForFunction(() => typeof window.Alpine?.components !== 'undefined');
 
         await page.evaluate(() => {
             const el = document.createElement('div');
@@ -50,4 +50,3 @@ test.describe('Basic Rendering', () => {
         await expect(count).toHaveText('1');
     });
 });
-

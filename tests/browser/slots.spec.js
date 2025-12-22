@@ -40,11 +40,10 @@ test.describe('Slot Behavior', () => {
         const logs = [];
         page.on('console', msg => logs.push(msg.text()));
 
-        await page.waitForFunction(() => typeof window.AlpineComponent !== 'undefined');
+        await page.waitForFunction(() => typeof window.Alpine?.components !== 'undefined');
 
         await page.evaluate(() => {
-            // Register a component with duplicate default slots
-            window.AlpineComponent.register('bad-slots', 'bad-slots/bad-slots.html');
+            window.Alpine.components.register('bad-slots', 'bad-slots/bad-slots.html');
         });
 
         await page.evaluate(() => {
@@ -58,4 +57,3 @@ test.describe('Slot Behavior', () => {
         expect(logs.some(l => l.includes('default slots; only one allowed'))).toBe(true);
     });
 });
-

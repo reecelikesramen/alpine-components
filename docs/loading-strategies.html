@@ -16,18 +16,18 @@
                 <article class="strategy-card">
                     <h3>Eager (default)</h3>
                     <p>Loads immediately when Alpine initializes. Best for above-the-fold content.</p>
-                    <pre><code class="language-html">&lt;div x-component="modal"&gt;&lt;/div&gt;
-&lt;div x-component.eager="modal"&gt;&lt;/div&gt;</code></pre>
+                    <pre><code class="language-html">&lt;template x-component="modal"&gt;&lt;/template&gt;
+&lt;template x-component.eager="modal"&gt;&lt;/template&gt;</code></pre>
                 </article>
 
                 <article class="strategy-card">
                     <h3>Visible</h3>
                     <p>Loads when the element enters the viewport. Uses IntersectionObserver for efficiency.</p>
                     <pre><code class="language-html">&lt;!-- Load when visible --&gt;
-&lt;div x-component.visible="modal"&gt;&lt;/div&gt;
+&lt;template x-component.visible="modal"&gt;&lt;/template&gt;
 
 &lt;!-- Load 100px before visible --&gt;
-&lt;div x-component.visible.100px="modal"&gt;&lt;/div&gt;</code></pre>
+&lt;template x-component.visible.100px="modal"&gt;&lt;/template&gt;</code></pre>
                 </article>
 
                 <article class="strategy-card">
@@ -37,13 +37,13 @@
     Open Modal
 &lt;/button&gt;
 
-&lt;div x-component.event.openModal="modal"&gt;&lt;/div&gt;</code></pre>
+&lt;template x-component.event.openModal="modal"&gt;&lt;/template&gt;</code></pre>
                     <p><strong>Default event</strong>: If you omit the explicit event name, <code>.event</code> waits for <code>alpine-components:load</code> and matches on <code>detail.id</code>.</p>
                     <pre><code class="language-html">&lt;button @click="$dispatch('alpine-components:load', { id: 'modal' })"&gt;
     Load Modal
 &lt;/button&gt;
 
-&lt;div x-component.event="modal"&gt;&lt;/div&gt;</code></pre>
+&lt;template x-component.event="modal"&gt;&lt;/template&gt;</code></pre>
                 </article>
             </div>
 

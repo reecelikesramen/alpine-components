@@ -2,8 +2,8 @@ const defaultOptions = {
     animationDuration: 400
 };
 
-export default function modal(options = {}) {
-    const config = { ...defaultOptions, ...options };
+export default function modal(params = {}) {
+    const config = { ...defaultOptions, ...params };
 
     return {
         isOpen: false,

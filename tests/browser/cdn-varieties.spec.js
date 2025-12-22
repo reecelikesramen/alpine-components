@@ -10,8 +10,8 @@ test.describe('CDN and Script Varieties', () => {
             script.type = 'module';
             script.textContent = `
                 import Alpine from 'https://unpkg.com/alpinejs@3.x/dist/module.esm.js';
-                import { AlpineComponentPlugin } from '/dist/module.esm.js';
-                Alpine.plugin(AlpineComponentPlugin);
+                import components from '/dist/module.esm.js';
+                Alpine.plugin(components);
                 Alpine.start();
                 window.Alpine = Alpine;
             `;
@@ -25,9 +25,16 @@ test.describe('CDN and Script Varieties', () => {
     test('IIFE auto-registers plugin', async ({ page }) => {
         await page.goto('/pages/basic.html');
         const isRegistered = await page.evaluate(() => {
-            return typeof window.AlpineComponent !== 'undefined';
+            return typeof window.Alpine?.components !== 'undefined';
         });
         expect(isRegistered).toBe(true);
     });
-});
 
+    test('Alpine.components.register works inside alpine:init', async ({ page }) => {
+        await page.goto('/pages/basic.html');
+        const hasRegister = await page.evaluate(() => {
+            return typeof window.Alpine.components.register === 'function';
+        });
+        expect(hasRegister).toBe(true);
+    });
+});

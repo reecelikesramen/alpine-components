@@ -1,4 +1,4 @@
-export default function demo() {
+export default function demo(params = {}) {
     return {
         showSource: false,
         copied: false,
@@ -11,3 +11,4 @@ export default function demo() {
         }
     };
 }
+

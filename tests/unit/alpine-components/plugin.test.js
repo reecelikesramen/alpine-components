@@ -2,9 +2,9 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { AlpineComponentPlugin, AlpineComponent } from '@alpine-components/core';
+import components from '@alpine-components/core';
 
-describe('AlpineComponentPlugin', () => {
+describe('components plugin', () => {
     let mockAlpine;
 
     beforeEach(() => {
@@ -12,20 +12,37 @@ describe('AlpineComponentPlugin', () => {
             prefixed: vi.fn().mockReturnValue('x-ignore'),
             directive: vi.fn().mockReturnThis(),
             before: vi.fn().mockReturnThis(),
+            magic: vi.fn().mockReturnThis(),
             initTree: vi.fn(),
             data: vi.fn()
         };
-        AlpineComponent._registry.clear();
         vi.restoreAllMocks();
     });
 
-    it('registers x-component directive', () => {
-        AlpineComponentPlugin(mockAlpine);
+    it('registers x-component directive when called directly', () => {
+        components(mockAlpine);
         expect(mockAlpine.directive).toHaveBeenCalledWith('component', expect.any(Function));
     });
 
+    it('registers x-component directive when called with options', () => {
+        const plugin = components({ base: '/custom/' });
+        plugin(mockAlpine);
+        expect(mockAlpine.directive).toHaveBeenCalledWith('component', expect.any(Function));
+    });
+
+    it('attaches components object to Alpine', () => {
+        components(mockAlpine);
+        expect(mockAlpine.components).toBeDefined();
+        expect(mockAlpine.components._registry).toBeInstanceOf(Map);
+    });
+
+    it('registers $params magic', () => {
+        components(mockAlpine);
+        expect(mockAlpine.magic).toHaveBeenCalledWith('params', expect.any(Function));
+    });
+
     it('sync handler sets initial state', () => {
-        AlpineComponentPlugin(mockAlpine);
+        components(mockAlpine);
         const asyncHandler = mockAlpine.directive.mock.calls[0][1];
         const syncHandler = asyncHandler.inline;
         
@@ -39,7 +56,7 @@ describe('AlpineComponentPlugin', () => {
     });
 
     it('async handler ignores already loading elements', async () => {
-        AlpineComponentPlugin(mockAlpine);
+        components(mockAlpine);
         const asyncHandler = mockAlpine.directive.mock.calls[0][1];
         
         const el = document.createElement('div');
@@ -49,4 +66,3 @@ describe('AlpineComponentPlugin', () => {
         expect(el._x_component).toBe('loading');
     });
 });
-

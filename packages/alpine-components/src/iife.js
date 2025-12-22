@@ -1,12 +1,8 @@
-import { AlpineComponent, AlpineComponentPlugin } from './index.js';
-
-// Attach to window
-window.AlpineComponent = AlpineComponent;
+import components from './index.js';
 
 // Auto-register when Alpine is available
 document.addEventListener('alpine:init', () => {
-    Alpine.plugin(AlpineComponentPlugin);
+    Alpine.plugin(components);
 });
 
-export { AlpineComponent, AlpineComponentPlugin };
-
+export default components;

@@ -1,6 +1,6 @@
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
-import { AlpineComponent, AlpineComponentPlugin } from 'alpine-components';
+import components from 'alpine-components';
 import { registerSearch } from './search/search.js';
 
 function createThemeStore() {
@@ -83,22 +83,21 @@ function createThemeStore() {
   };
 }
 
-// Set base path for components (uses Vite's base config)
-AlpineComponent.setBase(`${import.meta.env.BASE_URL}components`);
-
-// Register components
-AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
-AlpineComponent.register('tabs', 'tabs/tabs.html', 'tabs/tabs.js');
-AlpineComponent.register('codeBlock', 'code-block/code-block.html', 'code-block/code-block.js');
-AlpineComponent.register('demo', 'demo/demo.html', 'demo/demo.js');
-AlpineComponent.register('installTicker', 'install-ticker/install-ticker.html', 'install-ticker/install-ticker.js');
-AlpineComponent.register('search-modal', 'search-modal/search-modal.html');
-AlpineComponent.register('docs-actions', 'docs-actions/docs-actions.html');
-AlpineComponent.register('strategy-card', 'strategy-card/strategy-card.html');
-
 // Use plugins
 Alpine.plugin(collapse);
-Alpine.plugin(AlpineComponentPlugin);
+Alpine.plugin(components({
+  base: `${import.meta.env.BASE_URL}components`
+}));
+
+// Register components
+Alpine.components.register('modal', 'modal/modal.html', 'modal/modal.js');
+Alpine.components.register('tabs', 'tabs/tabs.html', 'tabs/tabs.js');
+Alpine.components.register('codeBlock', 'code-block/code-block.html', 'code-block/code-block.js');
+Alpine.components.register('demo', 'demo/demo.html', 'demo/demo.js');
+Alpine.components.register('installTicker', 'install-ticker/install-ticker.html', 'install-ticker/install-ticker.js');
+Alpine.components.register('search-modal', 'search-modal/search-modal.html');
+Alpine.components.register('docs-actions', 'docs-actions/docs-actions.html');
+Alpine.components.register('strategy-card', 'strategy-card/strategy-card.html');
 
 // Stores
 Alpine.store('theme', createThemeStore());

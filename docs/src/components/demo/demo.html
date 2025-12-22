@@ -1,5 +1,5 @@
 <template>
-<div x-data="demo" class="demo-container">
+<div x-data="demo($params)" class="demo-container">
     <div class="demo-preview">
         <slot name="preview"></slot>
     </div>
@@ -12,3 +12,4 @@
     </div>
 </div>
 </template>
+

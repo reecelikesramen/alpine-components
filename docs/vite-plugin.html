@@ -104,7 +104,9 @@ export default defineConfig({
 });
 
 // main.js
-AlpineComponent.setBase(`${import.meta.env.BASE_URL}components`);</code></pre>
+Alpine.plugin(components({
+  base: `${import.meta.env.BASE_URL}components`
+}));</code></pre>
                 </section>
 
                 {{> footer}}

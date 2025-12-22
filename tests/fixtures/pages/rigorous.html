@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="/dist/cdn.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.components.register('nested-parent', 'nested-parent/nested-parent.html');
+            Alpine.components.register('nested-child', 'nested-child/nested-child.html');
+            Alpine.components.register('multi_asset', 'multi-asset/multi-asset.html');
+            Alpine.components.register('no-template', 'no-template/no-template.html');
+            Alpine.components.register('params-tester', 'params-tester/params-tester.html');
+            Alpine.components.register('style-leak', 'style-leak/style-leak.html');
+            Alpine.components.register('deep_nest_1', 'deep-nest-1/deep-nest-1.html');
+            Alpine.components.register('deep_nest_2', 'deep-nest-2/deep-nest-2.html');
+            Alpine.components.register('deep_nest_3', 'deep-nest-3/deep-nest-3.html');
+        });
+    </script>
+</head>
+<body>
+    <div x-data>
+        <section id="section-nested">
+            <div x-component="nested-parent"></div>
+        </section>
+
+        <section id="section-deep-nesting">
+            <div x-component="deep_nest_1" val="root" id="deep-nest-root"></div>
+        </section>
+
+        <section id="section-multi-asset">
+            <div x-component="multi_asset" id="multi-1"></div>
+            <div x-component="multi_asset" id="multi-2"></div>
+        </section>
+
+        <section id="section-no-template">
+            <div x-component="no-template" foo="bar" id="no-template-1"></div>
+        </section>
+
+        <section id="section-params">
+            <div x-component="params-tester" 
+                 initial="start" 
+                 attr="some-attr" 
+                 class="custom-class"
+                 text="Hello Params"
+                 count-val="42"
+                 update="finished"
+                 id="params-1"></div>
+        </section>
+
+        <section id="section-style-leak">
+            <div x-component="style-leak" id="leak-1"></div>
+            <div x-component="style-leak" id="leak-2"></div>
+        </section>
+    </div>
+</body>
+</html>
+

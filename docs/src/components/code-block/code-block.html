@@ -1,5 +1,5 @@
 <template>
-<div x-data="codeBlock" class="code-block">
+<div x-data="codeBlock($params)" class="code-block">
     <div class="code-header">
         <span x-text="language"></span>
         <button class="copy-btn outline secondary" @click="copy" x-text="copied ? 'Copied!' : 'Copy'"></button>

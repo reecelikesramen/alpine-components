@@ -1,5 +1,5 @@
 <template>
-<div x-data="modal">
+<div x-data="modal($params)">
     <!-- Trigger -->
         <slot name="trigger">
     <button x-bind="trigger" class="contrast">Open Modal</button>

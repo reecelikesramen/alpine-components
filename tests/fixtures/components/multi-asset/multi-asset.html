@@ -1,0 +1,29 @@
+<template>
+    <div class="multi-asset" x-data="multi_asset">
+        <p class="asset-text-1">Text 1</p>
+        <p class="asset-text-2">Text 2</p>
+    </div>
+</template>
+
+<style>
+    .asset-text-1 { color: red; }
+</style>
+
+<style>
+    .asset-text-2 { font-weight: bold; }
+</style>
+
+<script>
+    window.multiAssetLoaded = (window.multiAssetLoaded || 0) + 1;
+</script>
+
+<script type="module">
+    export default function multi_asset() {
+        return {
+            init() {
+                this.$el.dataset.initialized = 'true';
+            }
+        }
+    }
+</script>
+

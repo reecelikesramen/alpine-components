@@ -1,11 +1,11 @@
-export default function installTicker(initialCommands = null) {
+export default function installTicker(params = {}) {
     const defaultCommands = [
         'npm install alpine-components',
         'pnpm add alpine-components',
         'yarn add alpine-components'
     ];
 
-    const commands = initialCommands || defaultCommands;
+    const commands = params.commands || defaultCommands;
 
     return {
         // We append the first item to the end for seamless looping

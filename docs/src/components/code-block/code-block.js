@@ -1,6 +1,6 @@
-export default function codeBlock(config = {}) {
+export default function codeBlock(params = {}) {
     return {
-        language: config.language || 'code',
+        language: params.language || 'code',
         copied: false,
 
         async copy() {
@@ -11,3 +11,4 @@ export default function codeBlock(config = {}) {
         }
     };
 }
+

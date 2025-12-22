@@ -9,7 +9,7 @@
         <header class="hero">
             <h1>Alpine Components</h1>
             <p class="tagline">Lazy-loaded components with slots for Alpine.js</p>
-            <div x-component="installTicker" x-data="installTicker()"></div>
+            <div x-component="installTicker"></div>
         </header>
 
         {{> nav}}
@@ -42,12 +42,12 @@
             <h2>Quick Example</h2>
 
             <pre><code class="language-javascript">// Register a component
-AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
+Alpine.components.register('modal', 'modal/modal.html', 'modal/modal.js');
 
 // Use it in your HTML
-&lt;div x-component="modal"&gt;
-    &lt;slot name="header"&gt;Custom Title&lt;/slot&gt;
-&lt;/div&gt;</code></pre>
+&lt;template x-component="modal" title="Custom Title"&gt;
+    &lt;p&gt;Custom body content&lt;/p&gt;
+&lt;/template&gt;</code></pre>
 
             <h3>Live Demo</h3>
             <div class="demo-container" style="margin-bottom: 2rem;">
@@ -63,7 +63,7 @@ AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
         <section>
             <h2>Installation</h2>
 
-            <div x-component="installTicker" x-data="installTicker()" style="margin-bottom: 2rem;"></div>
+            <div x-component="installTicker" style="margin-bottom: 2rem;"></div>
 
             <p><a href="vite-plugin">Configure the Vite plugin →</a></p>
         </section>

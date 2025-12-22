@@ -128,7 +128,7 @@ export function componentAssetsPlugin(options = {}) {
       const srcDir = resolve(rootDir, src);
       const outDir = resolve(rootDir, outDirRoot, dest);
 
-      await processDirectory(srcDir, outDir, srcDir, manifest);
+      await processDirectory(srcDir, outDir, srcDir, manifest, dest);
 
       // Inject manifest into all built HTML files
       if (Object.keys(manifest).length === 0) return;
@@ -164,7 +164,7 @@ async function injectManifestIntoHtmlFiles(dir, script) {
   }
 }
 
-async function processDirectory(dir, outDir, baseDir, manifest) {
+async function processDirectory(dir, outDir, baseDir, manifest, dest) {
   const entries = await readdir(dir, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -174,7 +174,7 @@ async function processDirectory(dir, outDir, baseDir, manifest) {
 
     if (entry.isDirectory()) {
       await mkdir(join(outDir, relativePath), { recursive: true });
-      await processDirectory(srcPath, outDir, baseDir, manifest);
+      await processDirectory(srcPath, outDir, baseDir, manifest, dest);
       continue;
     }
 
@@ -207,8 +207,9 @@ async function processDirectory(dir, outDir, baseDir, manifest) {
     const hashedPath = join(destDir, hashedName);
 
     // Record in manifest: relative original path -> relative hashed path
-    const originalRelative = relativePath;
-    const hashedRelative = join(dirname(relativePath), hashedName);
+    // Use forward slashes for manifest keys and values
+    const originalRelative = join(dest, relativePath).replace(/\\/g, '/');
+    const hashedRelative = join(dest, dirname(relativePath), hashedName).replace(/\\/g, '/');
     manifest[originalRelative] = hashedRelative;
 
     await writeFile(hashedPath, outputContent);

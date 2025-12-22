@@ -1,7 +1,7 @@
-export default function tabs(config = {}) {
+export default function tabs(params = {}) {
     return {
-        activeTab: config.initial || 0,
-        labels: config.labels || ['Tab 1', 'Tab 2'],
+        activeTab: parseInt(params.initial || 0),
+        labels: params.labels || ['Tab 1', 'Tab 2'],
 
         init() {
             this.$watch('activeTab', () => this.updatePanels());
@@ -17,3 +17,4 @@ export default function tabs(config = {}) {
         }
     };
 }
+

@@ -1,0 +1,8 @@
+<template>
+    <div class="nested-parent" x-data="{ parentLabel: 'Parent' }">
+        <h3 x-text="parentLabel"></h3>
+        <div x-component="nested-child" label="Child 1"></div>
+        <div x-component="nested-child" label="Child 2"></div>
+    </div>
+</template>
+

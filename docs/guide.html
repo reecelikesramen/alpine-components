@@ -22,13 +22,12 @@
             <p>The easiest way to start. Include the Alpine Components script <strong>before</strong> Alpine's core script. It auto-registers the plugin during <code>alpine:init</code>.</p>
 
             <pre><code class="language-html">&lt;!-- index.html --&gt;
-&lt;script defer src="https://cdn.jsdelivr.net/npm/alpine-components@0.1.2/dist/alpine-components.min.js"&gt;&lt;/script&gt;
+&lt;script defer src="https://cdn.jsdelivr.net/npm/alpine-components@0.2.0/dist/cdn.min.js"&gt;&lt;/script&gt;
 &lt;script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"&gt;&lt;/script&gt;
 
 &lt;script&gt;
 document.addEventListener('alpine:init', () =&gt; {
-  AlpineComponent.setBase('/components');
-  AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
+  Alpine.components.register('modal', 'modal/modal.html', 'modal/modal.js');
 });
 &lt;/script&gt;</code></pre>
 
@@ -39,13 +38,16 @@ document.addEventListener('alpine:init', () =&gt; {
 
             <pre><code class="language-javascript">// main.js
 import Alpine from 'alpinejs';
-import { AlpineComponent, AlpineComponentPlugin } from 'alpine-components';
+import components from 'alpine-components';
+
+// Initialize the plugin
+Alpine.plugin(components({
+  base: '/components'
+}));
 
 // Register your components
-AlpineComponent.register('modal', 'modal/modal.html', 'modal/modal.js');
+Alpine.components.register('modal', 'modal/modal.html', 'modal/modal.js');
 
-// Use the plugin
-Alpine.plugin(AlpineComponentPlugin);
 Alpine.start();</code></pre>
 
             <h2>3. Create a component</h2>
@@ -101,12 +103,12 @@ Alpine.start();</code></pre>
 }</code></pre>
 
             <h2>4. Use the component</h2>
-            <pre><code class="language-html">&lt;div x-component="modal"&gt;&lt;/div&gt;</code></pre>
+            <pre><code class="language-html">&lt;template x-component="modal"&gt;&lt;/template&gt;</code></pre>
 
             <h2>Live Demo</h2>
             <div class="demo-container">
                 <div class="demo-preview">
-                    <div x-component="modal"></div>
+                    <template x-component="modal"></template>
                 </div>
             </div>
 
