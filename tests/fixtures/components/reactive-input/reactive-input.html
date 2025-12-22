@@ -1,0 +1,11 @@
+<template>
+    <div class="reactive-input" x-data="{ modelValue: '' }" x-modelable="modelValue">
+        <input 
+            type="text" 
+            x-model="modelValue"
+            id="model-input"
+        >
+        <span id="param-count" x-text="$params.count"></span>
+        <span id="param-label" x-text="$params.label"></span>
+    </div>
+</template>

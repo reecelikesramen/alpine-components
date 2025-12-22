@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<script defer type="module">
+import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3/+esm';
+import AlpineComponents from 'alpine-components';
+
+Alpine.plugin(AlpineComponents);
+
+Alpine.start();
+
+window.Alpine = Alpine;
+</script>
+<body x-data="{ count: 0, name: 'John' }">
+    <p x-text="name"></p>
+    <button @click="count++; console.log('clicked', count)">Click me</button>
+    <template x-component="/components/test/all-in-one.html" title="Hello World" :count="count" x-model="name"></template>
+</body>
+</html>

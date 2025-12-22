@@ -5,6 +5,11 @@ import { componentAssetsPlugin } from 'vite-plugin-alpine-components';
 
 export default defineConfig({
   base: '/',
+  resolve: {
+    alias: {
+      'alpine-components': resolve(__dirname, '../packages/alpine-components/src/index.js')
+    }
+  },
   plugins: [
     handlebars({
       partialDirectory: resolve(__dirname, 'src/partials'),

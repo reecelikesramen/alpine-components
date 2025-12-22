@@ -22,8 +22,8 @@
             <p>The easiest way to start. Include the Alpine Components script <strong>before</strong> Alpine's core script. It auto-registers the plugin during <code>alpine:init</code>.</p>
 
             <pre><code class="language-html">&lt;!-- index.html --&gt;
-&lt;script defer src="https://cdn.jsdelivr.net/npm/alpine-components@0.2.0/dist/cdn.min.js"&gt;&lt;/script&gt;
-&lt;script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"&gt;&lt;/script&gt;
+&lt;script defer src="//unpkg.com/alpine-components"&gt;&lt;/script&gt;
+&lt;script defer src="//unpkg.com/alpinejs"&gt;&lt;/script&gt;
 
 &lt;script&gt;
 document.addEventListener('alpine:init', () =&gt; {
@@ -38,10 +38,10 @@ document.addEventListener('alpine:init', () =&gt; {
 
             <pre><code class="language-javascript">// main.js
 import Alpine from 'alpinejs';
-import components from 'alpine-components';
+import AlpineComponents from 'alpine-components';
 
 // Initialize the plugin
-Alpine.plugin(components({
+Alpine.plugin(AlpineComponents({
   base: '/components'
 }));
 
@@ -108,7 +108,7 @@ Alpine.start();</code></pre>
             <h2>Live Demo</h2>
             <div class="demo-container">
                 <div class="demo-preview">
-                    <template x-component="modal"></template>
+                    <template x-component.visible.100px="modal"></template>
                 </div>
             </div>
 

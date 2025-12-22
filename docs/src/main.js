@@ -1,6 +1,6 @@
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
-import components from 'alpine-components';
+import AlpineComponents from 'alpine-components';
 import { registerSearch } from './search/search.js';
 
 function createThemeStore() {
@@ -85,7 +85,7 @@ function createThemeStore() {
 
 // Use plugins
 Alpine.plugin(collapse);
-Alpine.plugin(components({
+Alpine.plugin(AlpineComponents({
   base: `${import.meta.env.BASE_URL}components`
 }));
 

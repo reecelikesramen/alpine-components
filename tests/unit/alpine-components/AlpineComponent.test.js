@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import components from '@alpine-components/core';
+import AlpineComponents from '@alpine-components/core';
 
 describe('Alpine.components', () => {
     let mockAlpine;
@@ -16,7 +16,7 @@ describe('Alpine.components', () => {
             initTree: vi.fn(),
             data: vi.fn()
         };
-        components(mockAlpine);
+        AlpineComponents(mockAlpine);
         vi.restoreAllMocks();
     });
 
@@ -42,7 +42,7 @@ describe('Alpine.components', () => {
     });
 
     it('resolves paths with base option', () => {
-        const plugin = components({ base: '/custom/' });
+        const plugin = AlpineComponents({ base: '/custom/' });
         plugin(mockAlpine);
         
         const resolved = mockAlpine.components._resolveWithBase('test.html', 'html');
@@ -50,7 +50,7 @@ describe('Alpine.components', () => {
     });
 
     it('resolves paths with array base option', () => {
-        const plugin = components({ base: ['/html/', '/js/'] });
+        const plugin = AlpineComponents({ base: ['/html/', '/js/'] });
         plugin(mockAlpine);
         
         expect(mockAlpine.components._resolveWithBase('test.html', 'html')).toBe('/html/test.html');
@@ -58,7 +58,7 @@ describe('Alpine.components', () => {
     });
 
     it('resolves alias with placeholders', () => {
-        const plugin = components({ alias: '/components/[name]/[name].[ext]' });
+        const plugin = AlpineComponents({ alias: '/components/[name]/[name].[ext]' });
         plugin(mockAlpine);
         
         const htmlPath = mockAlpine.components._resolveAlias('modal', 'html');
@@ -69,7 +69,7 @@ describe('Alpine.components', () => {
     });
 
     it('resolves alias with array pattern', () => {
-        const plugin = components({ 
+        const plugin = AlpineComponents({ 
             alias: ['/templates/[name].html', '/scripts/[name].js'] 
         });
         plugin(mockAlpine);
@@ -105,19 +105,19 @@ describe('Alpine.components', () => {
 
     describe('Placeholder Variations', () => {
         it('handles multiple [name] placeholders', () => {
-            const plugin = components({ alias: '/comp/[name]/dir/[name].[ext]' });
+            const plugin = AlpineComponents({ alias: '/comp/[name]/dir/[name].[ext]' });
             plugin(mockAlpine);
             expect(mockAlpine.components._resolveAlias('modal', 'html')).toBe('/comp/modal/dir/modal.html');
         });
 
         it('handles multiple [ext] placeholders', () => {
-            const plugin = components({ alias: '/assets/[ext]/[name].[ext]' });
+            const plugin = AlpineComponents({ alias: '/assets/[ext]/[name].[ext]' });
             plugin(mockAlpine);
             expect(mockAlpine.components._resolveAlias('modal', 'js')).toBe('/assets/js/modal.js');
         });
 
         it('handles no placeholders (static path)', () => {
-            const plugin = components({ alias: '/static/component.html' });
+            const plugin = AlpineComponents({ alias: '/static/component.html' });
             plugin(mockAlpine);
             expect(mockAlpine.components._resolveAlias('modal', 'html')).toBe('/static/component.html');
         });
@@ -125,7 +125,7 @@ describe('Alpine.components', () => {
 
     describe('Options Priority and Edge Cases', () => {
         it('applies base to alias-resolved paths', () => {
-            const plugin = components({ 
+            const plugin = AlpineComponents({ 
                 base: '/base/',
                 alias: 'comp/[name].[ext]'
             });
@@ -136,7 +136,7 @@ describe('Alpine.components', () => {
         });
 
         it('applies base to registered paths if they are relative', () => {
-            const plugin = components({ base: '/base/' });
+            const plugin = AlpineComponents({ base: '/base/' });
             plugin(mockAlpine);
             mockAlpine.components.register('modal', 'modal.html');
             
@@ -145,7 +145,7 @@ describe('Alpine.components', () => {
         });
 
         it('does not apply base to absolute registered paths', () => {
-            const plugin = components({ base: '/base/' });
+            const plugin = AlpineComponents({ base: '/base/' });
             plugin(mockAlpine);
             mockAlpine.components.register('modal', '/absolute/modal.html');
             
@@ -154,7 +154,7 @@ describe('Alpine.components', () => {
         });
 
         it('handles array base with array alias', () => {
-            const plugin = components({ 
+            const plugin = AlpineComponents({ 
                 base: ['/h/', '/j/'],
                 alias: ['[name].html', '[name].js']
             });

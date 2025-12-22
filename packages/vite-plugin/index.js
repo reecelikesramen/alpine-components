@@ -59,7 +59,8 @@ export function componentAssetsPlugin(options = {}) {
   }
 
   async function injectLoadingHtml(html) {
-    const regex = /<[^>]+\sx-component="([^"]+)"[^>]*>/g;
+    // Match x-component with optional modifiers: x-component.visible.100px="modal"
+    const regex = /<[^>]+\sx-component(?:\.[^=]*)?="([^"]+)"[^>]*>/g;
 
     // Collect all component names to prefetch loading HTML
     const matches = [...html.matchAll(regex)];

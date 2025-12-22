@@ -5,7 +5,7 @@
          :data-attr="$params.attr"
          :class="$params.class">
         <span id="param-text" x-text="$params.text"></span>
-        <span id="param-count" x-text="$params.countVal"></span>
+        <span id="param-count" x-text="$params['count-val']"></span>
         <button id="param-action" @click="internal = $params.update">Update</button>
         <span id="param-internal" x-text="internal"></span>
     </div>

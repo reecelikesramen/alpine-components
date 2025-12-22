@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="/dist/cdn.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.components.register('reactive-input', 'reactive-input/reactive-input.html');
+        });
+    </script>
+</head>
+<body>
+    <!-- Test reactive params -->
+    <div x-data="{ count: 0, name: '', label: 'static' }" id="parent">
+        <button @click="count++" id="increment">Increment</button>
+        <span id="parent-count" x-text="count"></span>
+        <span id="parent-name" x-text="name"></span>
+        
+        <template x-component="reactive-input" :count="count" x-model="name" label="static-label"></template>
+    </div>
+
+    <!-- Test x-bind object syntax -->
+    <div x-data="{ opts: { foo: 'bar', num: 42 } }" id="bind-parent">
+        <button @click="opts.num++" id="bind-increment">Inc</button>
+        <template x-component="reactive-input" x-bind="opts" :count="100"></template>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,41 @@
+<template>
+    <div x-data="test($params)" x-modelable="testThing">
+        <template x-if="params.title">
+            <h1 x-text="params.title"></h1>
+        </template>
+        
+        <template x-if="params.count % 3 == 0">
+            <p x-text="params.count"></p>
+        </template>
+
+        <input x-model="testThing" />
+    </div>
+    <div>
+        <div>
+            <div x-data="{ blame: 'John' }" x-modelable="blame">
+                <input x-model="blame" />
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+    h1 {
+        color: red;
+        font-size: 2rem;
+    }
+</style>
+
+<script type="module">
+    console.log('test.js');
+    export default function test(params = {}) {
+        return {
+            params,
+            testThing: '',
+
+            init() {
+                console.log('init', this.params);
+            }
+        }
+    }
+</script>

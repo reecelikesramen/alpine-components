@@ -1,0 +1,22 @@
+<template>
+    <!-- 1. Direct top-level x-data with x-modelable -->
+    <div x-data="{ testThing: '' }" x-modelable="testThing" class="direct-model">
+        <input x-model="testThing" class="input-1" />
+        <span class="output-1" x-text="testThing"></span>
+        
+        <!-- Use params too -->
+        <span class="param-title" x-text="$params.title"></span>
+        <span class="param-count" x-text="$params.count"></span>
+    </div>
+
+    <!-- 2. Nested x-data with x-modelable (inside non-x-data parents) -->
+    <div>
+        <div>
+            <div x-data="{ blame: '' }" x-modelable="blame" class="nested-model">
+                <input x-model="blame" class="input-2" />
+                <span class="output-2" x-text="blame"></span>
+            </div>
+        </div>
+    </div>
+</template>
+

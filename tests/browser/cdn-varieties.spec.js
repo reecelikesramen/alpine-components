@@ -10,8 +10,8 @@ test.describe('CDN and Script Varieties', () => {
             script.type = 'module';
             script.textContent = `
                 import Alpine from 'https://unpkg.com/alpinejs@3.x/dist/module.esm.js';
-                import components from '/dist/module.esm.js';
-                Alpine.plugin(components);
+                import AlpineComponents from '/dist/module.esm.js';
+                Alpine.plugin(AlpineComponents);
                 Alpine.start();
                 window.Alpine = Alpine;
             `;

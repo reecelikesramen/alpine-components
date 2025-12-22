@@ -5,13 +5,37 @@ const strategies = {
     eager: () => Promise.resolve(),
 
     visible: (el, margin = '0px') => new Promise(resolve => {
+        let target = el;
+        let cleanup = () => {};
+
+        if (el.tagName === 'TEMPLATE') {
+            // Prefer existing loading sibling injected by Vite plugin
+            if (el.previousElementSibling && el.previousElementSibling.hasAttribute('data-loading-for')) {
+                target = el.previousElementSibling;
+            } else {
+                // Create an invisible anchor to observe position accurately
+                const anchor = document.createElement('div');
+                anchor.style.display = 'block';
+                anchor.style.width = '0';
+                anchor.style.height = '0';
+                anchor.style.overflow = 'hidden';
+                anchor.ariaHidden = 'true';
+
+                el.parentNode.insertBefore(anchor, el);
+                target = anchor;
+                cleanup = () => anchor.remove();
+            }
+        }
+
         const observer = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
                 observer.disconnect();
+                cleanup();
                 resolve();
             }
         }, { rootMargin: margin });
-        observer.observe(el);
+        
+        observer.observe(target);
     }),
 
     event: (el, eventName, componentName) => new Promise(resolve => {
@@ -29,6 +53,33 @@ const strategies = {
         window.addEventListener(defaultEvent, handler);
     })
 };
+
+/**
+ * Find all top-level x-data elements with x-modelable attribute.
+ * "Top-level" means no parent element with x-data within the component.
+ * Returns an array of matching elements.
+ */
+function findModelableRoots(container) {
+    const results = [];
+    
+    function walk(el) {
+        for (const child of el.children) {
+            if (child.hasAttribute('x-data')) {
+                // This is a top-level x-data element
+                if (child.hasAttribute('x-modelable')) {
+                    results.push(child);
+                }
+                // Don't descend further - anything nested is not top-level
+            } else {
+                // Keep searching in non-x-data elements
+                walk(child);
+            }
+        }
+    }
+    
+    walk(container);
+    return results;
+}
 
 /**
  * Create the components object that gets attached to Alpine
@@ -74,15 +125,21 @@ function createComponentsObject(options = {}) {
             if (!manifest) return path;
 
             // Try exact match first
-            if (manifest[path]) return manifest[path];
+            if (manifest[path]) {
+                return path.startsWith('/') ? '/' + manifest[path] : manifest[path];
+            }
 
             // Try stripping leading slash
             const noSlash = path.startsWith('/') ? path.slice(1) : path;
-            if (manifest[noSlash]) return manifest[noSlash];
+            if (manifest[noSlash]) {
+                return path.startsWith('/') ? '/' + manifest[noSlash] : manifest[noSlash];
+            }
 
             // Try adding leading slash
             const withSlash = path.startsWith('/') ? path : '/' + path;
-            if (manifest[withSlash]) return manifest[withSlash];
+            if (manifest[withSlash]) {
+                return path.startsWith('/') ? '/' + manifest[withSlash] : manifest[withSlash];
+            }
 
             return path;
         },
@@ -200,8 +257,11 @@ function createComponentsObject(options = {}) {
                 const url = URL.createObjectURL(blob);
                 promise = import(/* @vite-ignore */ url).then(module => {
                     URL.revokeObjectURL(url);
-                    if (module.default) {
-                        this._Alpine.data(name, module.default);
+                    // Register all exported functions by their name
+                    for (const [key, value] of Object.entries(module)) {
+                        if (typeof value !== 'function') continue;
+                        const fnName = value.name || (key !== 'default' ? key : name);
+                        this._Alpine.data(fnName, value);
                     }
                     return module;
                 }).catch(err => {
@@ -236,14 +296,13 @@ function createComponentsObject(options = {}) {
             const template = doc.querySelector('template');
             const templateContent = template ? template.innerHTML : html;
 
-            await this._extractAssets(doc.body || doc, name);
+            // Search entire document for assets - DOMParser may place style/script in head
+            await this._extractAssets(doc, name);
 
             return templateContent;
         },
 
         async _extractAssets(root, name) {
-            // Only extract from the provided root (usually doc.body for fragments)
-            // to avoid picking up scripts/styles from the main document if something went wrong
             const styles = root.querySelectorAll('style');
             styles.forEach((style, index) => {
                 this._applyStyle(name, style.textContent, index);
@@ -252,9 +311,7 @@ function createComponentsObject(options = {}) {
             const scripts = root.querySelectorAll('script');
             const scriptPromises = [];
             scripts.forEach((script, index) => {
-                // Skip if it's already an Alpine Component injected script
                 if (script.hasAttribute('data-component')) return;
-                
                 scriptPromises.push(this._applyScript(name, script, index));
             });
             await Promise.all(scriptPromises);
@@ -294,13 +351,6 @@ function createComponentsObject(options = {}) {
             return filename.replace(/\.(html|htm)$/, '');
         }
     };
-}
-
-/**
- * Convert kebab-case to camelCase
- */
-function kebabToCamel(str) {
-    return str.replace(/-./g, x => x[1].toUpperCase());
 }
 
 /**
@@ -386,21 +436,72 @@ function initPlugin(Alpine, options) {
         await strategies[strategyName](el, strategyArg, componentName);
         if (!el.isConnected) return;
 
+        // Find the parent scope element for evaluation context
+        // This must be captured BEFORE the template is replaced
+        // First, look for nearest element with _x_component_params (parent component)
+        // If not found, fall back to nearest element with _x_dataStack (x-data scope)
+        let scopeEl = el.parentElement;
+        while (scopeEl && !scopeEl._x_component_params && !scopeEl._x_dataStack) {
+            scopeEl = scopeEl.parentElement;
+        }
+        // Fall back to parent if nothing found
+        scopeEl = scopeEl || el.parentElement;
+
         // Extract params from element attributes (for <template x-component="...">)
-        const params = {};
+        // Store expressions for reactive evaluation, not static values
+        const paramExprs = {};
+        let bindExpr = null;
+        let modelExpr = null;
         const excludedAttrs = ['x-component', 'x-cloak', ignoreAttr];
+        
         for (const attr of el.attributes) {
             if (excludedAttrs.includes(attr.name)) continue;
 
-            if (attr.name.startsWith(':') || attr.name.startsWith('x-bind:')) {
+            if (attr.name === 'x-bind') {
+                // x-bind="{ ... }" object syntax
+                bindExpr = attr.value;
+            } else if (attr.name === 'x-model') {
+                // x-model="expr" for two-way binding
+                modelExpr = attr.value;
+            } else if (attr.name.startsWith(':') || attr.name.startsWith('x-bind:')) {
                 const rawName = attr.name.startsWith(':') ? attr.name.slice(1) : attr.name.slice(7);
-                const name = kebabToCamel(rawName);
-                params[name] = Alpine.evaluate(el, attr.value);
+                paramExprs[rawName] = { expr: attr.value, dynamic: true };
             } else if (!attr.name.startsWith('x-')) {
-                const name = kebabToCamel(attr.name);
-                params[name] = attr.value;
+                paramExprs[attr.name] = { value: attr.value, dynamic: false };
             }
         }
+
+        // Create reactive proxy that re-evaluates expressions on access
+        // Uses scopeEl for evaluation so it works after template replacement
+        const params = new Proxy({}, {
+            get(_, prop) {
+                // Handle x-bind object spread first
+                if (bindExpr) {
+                    const bindObj = Alpine.evaluate(scopeEl, bindExpr);
+                    if (bindObj && prop in bindObj) return bindObj[prop];
+                }
+                const entry = paramExprs[prop];
+                if (!entry) return undefined;
+                return entry.dynamic ? Alpine.evaluate(scopeEl, entry.expr) : entry.value;
+            },
+            ownKeys() {
+                const keys = Object.keys(paramExprs);
+                if (bindExpr) {
+                    const bindObj = Alpine.evaluate(scopeEl, bindExpr);
+                    if (bindObj) keys.push(...Object.keys(bindObj));
+                }
+                return [...new Set(keys)];
+            },
+            getOwnPropertyDescriptor(_, prop) {
+                // Required for ownKeys to work properly
+                if (paramExprs[prop]) return { enumerable: true, configurable: true };
+                if (bindExpr) {
+                    const bindObj = Alpine.evaluate(scopeEl, bindExpr);
+                    if (bindObj && prop in bindObj) return { enumerable: true, configurable: true };
+                }
+                return undefined;
+            }
+        });
 
         // Collect user-provided slot content
         const providedSlots = new Map();
@@ -485,6 +586,9 @@ function initPlugin(Alpine, options) {
             // Handle template vs regular element rendering
             const isTemplateEl = el.tagName === 'TEMPLATE';
 
+            // Capture loading sibling BEFORE any DOM replacement
+            const loadingSibling = el.previousElementSibling;
+
             if (isTemplateEl) {
                 // Replace template with unwrapped content
                 const fragment = document.createRange().createContextualFragment(container.innerHTML);
@@ -496,7 +600,19 @@ function initPlugin(Alpine, options) {
                     firstChild._x_component = 'loaded';
                 }
 
+                // Forward x-model to all top-level x-data elements with x-modelable
+                if (modelExpr) {
+                    for (const target of findModelableRoots(fragment)) {
+                        target.setAttribute('x-model', modelExpr);
+                    }
+                }
+
                 el.replaceWith(fragment);
+
+                // Remove loading sibling for template elements
+                if (loadingSibling?.dataset?.loadingFor === componentName) {
+                    loadingSibling.remove();
+                }
 
                 // Initialize the tree on the inserted elements
                 if (firstChild) {
@@ -507,6 +623,13 @@ function initPlugin(Alpine, options) {
                 el.innerHTML = container.innerHTML;
                 el._x_component_params = params;
 
+                // Forward x-model to all top-level x-data elements with x-modelable
+                if (modelExpr) {
+                    for (const target of findModelableRoots(el)) {
+                        target.setAttribute('x-model', modelExpr);
+                    }
+                }
+
                 // Activate: remove ignore and init tree
                 el._x_ignore = false;
                 el.removeAttribute(ignoreAttr);
@@ -516,9 +639,8 @@ function initPlugin(Alpine, options) {
                 Alpine.initTree(el);
             }
 
-            // Remove loading sibling if present
-            const loadingSibling = isTemplateEl ? null : el.previousElementSibling;
-            if (loadingSibling?.dataset.loadingFor === componentName) {
+            // Remove loading sibling if present (for non-template elements; template case handled above)
+            if (!isTemplateEl && loadingSibling?.dataset?.loadingFor === componentName) {
                 loadingSibling.remove();
             }
         } catch (err) {
@@ -542,17 +664,17 @@ function isAlpine(arg) {
  * Default export: components plugin
  *
  * Usage:
- *   Alpine.plugin(components)
- *   Alpine.plugin(components({ base: '/components/' }))
+ *   Alpine.plugin(AlpineComponents)
+ *   Alpine.plugin(AlpineComponents({ base: '/components/' }))
  */
-export default function components(optionsOrAlpine) {
+export default function AlpineComponents(optionsOrAlpine) {
     if (isAlpine(optionsOrAlpine)) {
-        // Called as Alpine.plugin(components)
+        // Called as Alpine.plugin(AlpineComponents)
         initPlugin(optionsOrAlpine, {});
         return;
     }
 
-    // Called as Alpine.plugin(components({ ...options }))
+    // Called as Alpine.plugin(AlpineComponents({ ...options }))
     return (Alpine) => initPlugin(Alpine, optionsOrAlpine || {});
 }
 

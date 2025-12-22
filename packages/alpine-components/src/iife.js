@@ -1,8 +1,8 @@
-import components from './index.js';
+import AlpineComponents from './index.js';
 
 // Auto-register when Alpine is available
 document.addEventListener('alpine:init', () => {
-    Alpine.plugin(components);
+    Alpine.plugin(AlpineComponents);
 });
 
-export default components;
+export default AlpineComponents;
