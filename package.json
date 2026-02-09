@@ -13,11 +13,11 @@
     "test:all": "npx pnpm run test:unit && npx pnpm run test:build && npx pnpm run test:browser"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.0",
+    "@playwright/test": "^1.58.2",
     "@vitest/browser": "^4.0.18",
-    "happy-dom": "^20.3.9",
+    "happy-dom": "^20.5.3",
     "jsdom": "^27.4.0",
-    "playwright": "^1.58.0",
+    "playwright": "^1.58.2",
     "vite": "^6.4.1",
     "vitest": "^4.0.18"
   }
