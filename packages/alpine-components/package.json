@@ -32,7 +32,7 @@
     "alpinejs": "^3.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-terser": "^1.0.0",
     "rollup": "^4.56.0"
   },
   "repository": {
