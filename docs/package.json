@@ -18,6 +18,6 @@
   "devDependencies": {
     "vite": "^6.0.0",
     "vite-plugin-alpine-components": "workspace:*",
-    "vite-plugin-handlebars": "^2.0.0"
+    "vite-plugin-handlebars": "^2.0.2"
   }
 }
